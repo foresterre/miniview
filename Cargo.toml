@@ -1,0 +1,13 @@
+[package]
+name = "miniview"
+version = "0.1.0"
+authors = ["Martijn Gribnau <garm@ilumeo.com>"]
+edition = "2018"
+license = "Apache-2.0"
+repository = "https://github.com/foresterre/miniview"
+description = "Display an image within a window. Callable with a CLI interface."
+
+[dependencies]
+image = "0.21.1"
+clap = "2.33.0"
+piston_window = "0.89.0"

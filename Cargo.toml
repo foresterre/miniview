@@ -4,9 +4,9 @@ version = "0.1.0"
 authors = ["Martijn Gribnau <garm@ilumeo.com>"]
 edition = "2018"
 license = "Apache-2.0"
-readme = "../README.md"
+readme = "README.md"
 repository = "https://github.com/foresterre/miniview"
-description = "Display an image within a window. Callable with a CLI interface."
+description = "Display an image within a (graphical) window. Callable from a CLI interface."
 keywords = ["image", "display", "graphical"]
 categories = ["graphics", "command-line-utilities"]
 

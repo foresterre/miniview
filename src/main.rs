@@ -30,6 +30,7 @@ fn app() -> App<'static, 'static> {
         .arg(
             Arg::with_name(IMPORT_FROM_PATH_CLI)
                 .long("from-path")
+                .short("p")
                 .conflicts_with_all(&[IMPORT_FROM_STDIN_BYTES, IMPORT_FROM_STDIN_PATH])
                 .takes_value(true)
                 .value_name("PATH")
@@ -39,6 +40,7 @@ fn app() -> App<'static, 'static> {
         .arg(
             Arg::with_name("import_from_stdin_path")
                 .long("from-stdin-path")
+                .short("s")
                 .conflicts_with_all(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_BYTES])
                 .help("Load and an image from the path received by stdin and display it.")
                 .required_unless_one(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_BYTES]),
@@ -46,6 +48,7 @@ fn app() -> App<'static, 'static> {
         .arg(
             Arg::with_name(IMPORT_FROM_STDIN_BYTES)
                 .long("from-stdin-bytes")
+                .short("b")
                 .conflicts_with_all(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH])
                 .help("Load and an image received by stdin (image as bytes), guess its format and display it.")
                 .required_unless_one(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH]),

@@ -9,6 +9,7 @@ repository = "https://github.com/foresterre/miniview"
 description = "Display an image within a (graphical) window. Callable from a CLI interface."
 keywords = ["image", "display", "graphical"]
 categories = ["graphics", "command-line-utilities"]
+exclude = ["resources/"]
 
 [dependencies]
 image = "0.21.1"

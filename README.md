@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/foresterre/miniview.svg?branch=master)](https://travis-ci.org/foresterre/miniview)
 
 # miniview
+_'mini' as in, it can't do much =)_
 
 Display an image within a (graphical) window.
 

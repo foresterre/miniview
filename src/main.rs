@@ -18,6 +18,7 @@ mod io;
 const IMPORT_FROM_PATH_CLI: &str = "import_from_path";
 const IMPORT_FROM_STDIN_BYTES: &str = "import_from_stdin_bytes";
 const IMPORT_FROM_STDIN_PATH: &str = "import_from_stdin_path";
+const POSITIONAL_FROM_PATH: &str = "positional_from_path";
 
 // Perhaps it will be better to use the lower level gfx tools instead of piston_window.
 fn app() -> App<'static, 'static> {
@@ -26,32 +27,39 @@ fn app() -> App<'static, 'static> {
         .version(crate_version!())
         .about(crate_description!())
         .setting(AppSettings::NextLineHelp)
-        .usage("miniview [--from-path <PATH> OR --from-stdin-bytes OR --from-stdin-path]")
+        .usage("miniview [<PATH> OR --from-path <PATH> OR --from-stdin-bytes OR --from-stdin-path]")
         .arg(
             Arg::with_name(IMPORT_FROM_PATH_CLI)
                 .long("from-path")
                 .short("p")
-                .conflicts_with_all(&[IMPORT_FROM_STDIN_BYTES, IMPORT_FROM_STDIN_PATH])
                 .takes_value(true)
                 .value_name("PATH")
                 .help("Load and an image from the given path and display it.")
-                .required_unless_one(&[IMPORT_FROM_STDIN_BYTES, IMPORT_FROM_STDIN_PATH]),
+                .conflicts_with_all(&[IMPORT_FROM_STDIN_BYTES, IMPORT_FROM_STDIN_PATH, POSITIONAL_FROM_PATH])
+                .required_unless_one(&[IMPORT_FROM_STDIN_BYTES, IMPORT_FROM_STDIN_PATH, POSITIONAL_FROM_PATH]),
         )
         .arg(
             Arg::with_name("import_from_stdin_path")
                 .long("from-stdin-path")
                 .short("s")
-                .conflicts_with_all(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_BYTES])
                 .help("Load and an image from the path received by stdin and display it.")
-                .required_unless_one(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_BYTES]),
+                .conflicts_with_all(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_BYTES, POSITIONAL_FROM_PATH])
+                .required_unless_one(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_BYTES, POSITIONAL_FROM_PATH]),
         )
         .arg(
             Arg::with_name(IMPORT_FROM_STDIN_BYTES)
                 .long("from-stdin-bytes")
                 .short("b")
-                .conflicts_with_all(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH])
                 .help("Load and an image received by stdin (image as bytes), guess its format and display it.")
-                .required_unless_one(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH]),
+                .conflicts_with_all(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH, POSITIONAL_FROM_PATH])
+                .required_unless_one(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH, POSITIONAL_FROM_PATH]),
+        )
+        .arg(
+            Arg::with_name(POSITIONAL_FROM_PATH)
+                .help("Load and an image from the given path and display it.")
+                .index(1)
+                .conflicts_with_all(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH, IMPORT_FROM_STDIN_BYTES])
+                .required_unless_one(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH, IMPORT_FROM_STDIN_BYTES]),
         )
 }
 
@@ -66,8 +74,9 @@ impl ImportFromSource {
             matches.is_present(IMPORT_FROM_PATH_CLI),
             matches.is_present(IMPORT_FROM_STDIN_PATH),
             matches.is_present(IMPORT_FROM_STDIN_BYTES),
+            matches.is_present(POSITIONAL_FROM_PATH),
         ) {
-            (true, false, false) => {
+            (true, false, false, false) => {
                 let path = matches
                     .value_of(IMPORT_FROM_PATH_CLI)
                     .ok_or_else(|| MiniViewError::EmptyInputPath)?;
@@ -75,8 +84,18 @@ impl ImportFromSource {
 
                 Ok(path)
             }
-            (false, true, false) => Ok(ImportFromSource::ByPath(read_path_from_stdin_block()?)),
-            (false, false, true) => Ok(ImportFromSource::StdinBytes),
+            (false, true, false, false) => {
+                Ok(ImportFromSource::ByPath(read_path_from_stdin_block()?))
+            }
+            (false, false, true, false) => Ok(ImportFromSource::StdinBytes),
+            (false, false, false, true) => {
+                let path = matches
+                    .value_of(POSITIONAL_FROM_PATH)
+                    .ok_or_else(|| MiniViewError::EmptyInputPath)?;
+                let path = ImportFromSource::ByPath(path.to_string());
+
+                Ok(path)
+            }
             _ => Err(MiniViewError::CliUnableToDetermineInputMode),
         }
     }

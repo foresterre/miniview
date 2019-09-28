@@ -17,6 +17,7 @@ Pre build binary: see [releases](https://github.com/foresterre/miniview/releases
 
 | Usage | Linux example | Windows example (cmd.exe) |
 |----------------------------------------|------------------------------------------------|------------------------------------------------|
+| `miniview <PATH_TO_IMAGE>` | `miniview image.png` | `miniview image.png` |
 | `miniview --from-path <PATH_TO_IMAGE>` | `miniview --from-path image.png` | `miniview --from-path  image.png` |
 | `miniview --from-stdin-path` | `echo image.png \| miniview --from-stdin-path`  | `echo image.png \| miniview --from-stdin-path` |
 | `miniview --from-stdin-bytes` | `cat image.png \| miniview --from-stdin-bytes` | `type image.png \| miniview --from-stdin-bytes` |

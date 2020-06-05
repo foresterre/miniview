@@ -1,16 +1,14 @@
 extern crate image as imagecrate; // There is also an image module in piston_window
 
-use std::error::Error;
-
+use crate::errors::{ImportError, MiniViewError};
+use crate::io::{import_image_from_stdin_bytes_block, read_path_from_stdin_block};
+use anyhow::Context;
 use clap::{
     crate_authors, crate_description, crate_name, crate_version, App, AppSettings, Arg, ArgMatches,
 };
 use imagecrate::DynamicImage;
 use imagecrate::GenericImageView;
 use piston_window::*;
-
-use crate::errors::{ImportError, MiniViewError};
-use crate::io::{import_image_from_stdin_bytes_block, read_path_from_stdin_block};
 
 mod errors;
 mod io;
@@ -22,7 +20,7 @@ const POSITIONAL_FROM_PATH: &str = "positional_from_path";
 const OPTION_FULLSCREEN: &str = "fullscreen";
 
 // Perhaps it will be better to use the lower level gfx tools instead of piston_window.
-fn app() -> App<'static, 'static> {
+fn matches() -> App<'static, 'static> {
     App::new(crate_name!())
         .author(crate_authors!())
         .version(crate_version!())
@@ -130,10 +128,8 @@ impl ResizableWhen for WindowSettings {
     }
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
-    let app = app().get_matches();
-
-    let source = ImportFromSource::try_new(&app)?;
+fn run_app(matches: &ArgMatches) -> Result<(), MiniViewError> {
+    let source = ImportFromSource::try_new(matches)?;
     let img = source.open()?;
 
     let width = img.width();
@@ -141,9 +137,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     let img = img.to_rgba();
 
     let mut window: PistonWindow = WindowSettings::new(crate_name!(), [width, height])
-        .fullscreen(app.is_present(OPTION_FULLSCREEN))
+        .fullscreen(matches.is_present(OPTION_FULLSCREEN))
         .exit_on_esc(true)
-        .resizable_when(|| app.is_present(OPTION_FULLSCREEN))
+        .resizable_when(|| matches.is_present(OPTION_FULLSCREEN))
         .build()
         .map_err(|_| MiniViewError::UnableToCreateWindow)?;
 
@@ -158,4 +154,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     Ok(())
+}
+
+fn main() -> anyhow::Result<()> {
+    let matches = matches().get_matches();
+    run_app(&matches).with_context(|| "miniview failed")
 }

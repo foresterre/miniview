@@ -31,6 +31,7 @@ Pre build binary: see [releases](https://github.com/foresterre/miniview/releases
 | Flag/Option | Description | 
 | ---    | ---         |
 | `--fullscreen` | Set the window to fullscreen |
+| `--allow-window-resizing` | Allow the window to resize (doesn't resize the image!) |
 
 <br>
 

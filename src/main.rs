@@ -18,6 +18,7 @@ const IMPORT_FROM_STDIN_BYTES: &str = "import_from_stdin_bytes";
 const IMPORT_FROM_STDIN_PATH: &str = "import_from_stdin_path";
 const POSITIONAL_FROM_PATH: &str = "positional_from_path";
 const OPTION_FULLSCREEN: &str = "fullscreen";
+const OPTION_WINDOW_RESIZE: &str = "window_resize";
 
 // Perhaps it will be better to use the lower level gfx tools instead of piston_window.
 fn cli() -> App<'static, 'static> {
@@ -26,14 +27,16 @@ fn cli() -> App<'static, 'static> {
         .version(crate_version!())
         .about(crate_description!())
         .setting(AppSettings::NextLineHelp)
-        .usage("miniview [<PATH> OR --from-path <PATH> OR --from-stdin-bytes OR --from-stdin-path] [--fullscreen]")
+        .usage("miniview (<PATH> OR --from-path <PATH> OR --from-stdin-bytes OR --from-stdin-path) \
+            [--fullscreen] \
+            [--allow-window-resizing]")
         .arg(
             Arg::with_name(IMPORT_FROM_PATH_CLI)
                 .long("from-path")
                 .short("p")
                 .takes_value(true)
                 .value_name("PATH")
-                .help("Load and an image from the given path and display it.")
+                .help("Load an image from the given path and display it.")
                 .conflicts_with_all(&[IMPORT_FROM_STDIN_BYTES, IMPORT_FROM_STDIN_PATH, POSITIONAL_FROM_PATH])
                 .required_unless_one(&[IMPORT_FROM_STDIN_BYTES, IMPORT_FROM_STDIN_PATH, POSITIONAL_FROM_PATH]),
         )
@@ -41,7 +44,7 @@ fn cli() -> App<'static, 'static> {
             Arg::with_name("import_from_stdin_path")
                 .long("from-stdin-path")
                 .short("s")
-                .help("Load and an image from the path received by stdin and display it.")
+                .help("Load an image from the path received by stdin and display it.")
                 .conflicts_with_all(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_BYTES, POSITIONAL_FROM_PATH])
                 .required_unless_one(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_BYTES, POSITIONAL_FROM_PATH]),
         )
@@ -49,13 +52,13 @@ fn cli() -> App<'static, 'static> {
             Arg::with_name(IMPORT_FROM_STDIN_BYTES)
                 .long("from-stdin-bytes")
                 .short("b")
-                .help("Load and an image received by stdin (image as bytes), guess its format and display it.")
+                .help("Load an image received by stdin (image as bytes), guess its format and display it.")
                 .conflicts_with_all(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH, POSITIONAL_FROM_PATH])
                 .required_unless_one(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH, POSITIONAL_FROM_PATH]),
         )
         .arg(
             Arg::with_name(POSITIONAL_FROM_PATH)
-                .help("Load and an image from the given path and display it.")
+                .help("Load an image from the given path and display it.")
                 .index(1)
                 .conflicts_with_all(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH, IMPORT_FROM_STDIN_BYTES])
                 .required_unless_one(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH, IMPORT_FROM_STDIN_BYTES]),
@@ -64,6 +67,11 @@ fn cli() -> App<'static, 'static> {
             Arg::with_name(OPTION_FULLSCREEN)
                 .help("Instruct the window to go into fullscreen mode")
                 .long("fullscreen")
+        )
+        .arg(
+            Arg::with_name(OPTION_WINDOW_RESIZE)
+                .help("Allow window resizing (doesn't resize the image)")
+                .long("allow-window-resizing")
         )
 }
 
@@ -123,7 +131,7 @@ impl ResizableWhen for WindowSettings {
         if cond {
             self.resizable(true)
         } else {
-            self
+            self.resizable(false)
         }
     }
 }
@@ -139,7 +147,11 @@ fn run_app(matches: &ArgMatches) -> Result<(), MiniViewError> {
     let mut window: PistonWindow = WindowSettings::new(crate_name!(), [width, height])
         .fullscreen(matches.is_present(OPTION_FULLSCREEN))
         .exit_on_esc(true)
-        .resizable_when(|| matches.is_present(OPTION_FULLSCREEN))
+        .resizable_when(|| {
+            // if window resizing is not enabled, when setting fullscreen to true, the window won't go
+            // into fullscreen mode
+            matches.is_present(OPTION_FULLSCREEN) || matches.is_present(OPTION_WINDOW_RESIZE)
+        })
         .build()
         .map_err(|_| MiniViewError::UnableToCreateWindow)?;
 

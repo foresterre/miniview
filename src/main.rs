@@ -20,7 +20,7 @@ const POSITIONAL_FROM_PATH: &str = "positional_from_path";
 const OPTION_FULLSCREEN: &str = "fullscreen";
 
 // Perhaps it will be better to use the lower level gfx tools instead of piston_window.
-fn matches() -> App<'static, 'static> {
+fn cli() -> App<'static, 'static> {
     App::new(crate_name!())
         .author(crate_authors!())
         .version(crate_version!())
@@ -157,6 +157,6 @@ fn run_app(matches: &ArgMatches) -> Result<(), MiniViewError> {
 }
 
 fn main() -> anyhow::Result<()> {
-    let matches = matches().get_matches();
+    let matches = cli().get_matches();
     run_app(&matches).with_context(|| "miniview failed")
 }

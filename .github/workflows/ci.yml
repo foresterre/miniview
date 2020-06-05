@@ -1,0 +1,127 @@
+# GitHub Actions workflow: CI for miniview
+# --
+# Based on GitHub Actions workflow: CI for sic: https://github.com/foresterre/sic/blob/dc589e2b3014e27038d450d1ae99e5251c68247b/.github/workflows/ci.yml
+# which is licensed under the MIT license: https://github.com/foresterre/sic/blob/dc589e2b3014e27038d450d1ae99e5251c68247b/LICENSE
+# --
+# originally based on: https://github.com/BurntSushi/bstr/blob/master/.github/workflows/ci.yml
+# which is licensed under Apache License, Version 2.0 or MIT license
+# --
+# based on Actions workflow for is
+
+name: "github_actions_ci"
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '00 01 * * *'
+jobs:
+  test:
+    name: pipeline_run_tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        build: [stable, beta, nightly, macos, win-gnu, win-msvc]
+        include:
+          # latest rust stable :: ubuntu
+          - build: stable
+            os: ubuntu-latest
+            rust: stable
+
+          # latest rust beta :: ubuntu
+          - build: beta
+            os: ubuntu-latest
+            rust: beta
+
+          # latest rust nightly :: ubuntu
+          - build: nightly
+            os: ubuntu-latest
+            rust: nightly
+
+          # latest rust stable :: mac_os
+          - build: macos
+            os: macOS-latest
+            rust: stable
+
+          # latest rust stable :: windows + gnu
+          - build: win-gnu
+            os: windows-latest
+            rust: stable-x86_64-gnu
+
+          # latest rust stable :: windows + msvc
+          - build: win-msvc
+            os: windows-latest
+            rust: stable
+
+    steps:
+      - name: checkout_repo
+        uses: actions/checkout@v2
+      - name: install_rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          override: true
+          profile: minimal
+
+      - name: build_workspace_crates
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --verbose --all
+
+      - name: test_workspace_crates
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --verbose --all
+
+      - name: test_workspace_with_all_features
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --verbose --all --all-features
+
+  rustfmt:
+    name: pipeline_rustfmt
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: install_rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          profile: minimal
+          components: rustfmt
+      - name: check_formatting
+        run: |
+          cargo fmt --all -- --check
+
+  clippy:
+    name: pipeline_clippy
+    runs-on: ubuntu-18.04
+    steps:
+      - name: checkout_repo
+        uses: actions/checkout@v2
+      - name: install_rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          profile: minimal
+          components: clippy
+      - name: check_with_clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features --workspace
+
+  cargo_deny:
+    name: pipeline_cargo_deny
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: EmbarkStudios/cargo-deny-action@v0
+

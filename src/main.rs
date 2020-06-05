@@ -19,6 +19,7 @@ const IMPORT_FROM_PATH_CLI: &str = "import_from_path";
 const IMPORT_FROM_STDIN_BYTES: &str = "import_from_stdin_bytes";
 const IMPORT_FROM_STDIN_PATH: &str = "import_from_stdin_path";
 const POSITIONAL_FROM_PATH: &str = "positional_from_path";
+const OPTION_FULLSCREEN: &str = "fullscreen";
 
 // Perhaps it will be better to use the lower level gfx tools instead of piston_window.
 fn app() -> App<'static, 'static> {
@@ -27,7 +28,7 @@ fn app() -> App<'static, 'static> {
         .version(crate_version!())
         .about(crate_description!())
         .setting(AppSettings::NextLineHelp)
-        .usage("miniview [<PATH> OR --from-path <PATH> OR --from-stdin-bytes OR --from-stdin-path]")
+        .usage("miniview [<PATH> OR --from-path <PATH> OR --from-stdin-bytes OR --from-stdin-path] [--fullscreen]")
         .arg(
             Arg::with_name(IMPORT_FROM_PATH_CLI)
                 .long("from-path")
@@ -60,6 +61,11 @@ fn app() -> App<'static, 'static> {
                 .index(1)
                 .conflicts_with_all(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH, IMPORT_FROM_STDIN_BYTES])
                 .required_unless_one(&[IMPORT_FROM_PATH_CLI, IMPORT_FROM_STDIN_PATH, IMPORT_FROM_STDIN_BYTES]),
+        )
+        .arg(
+            Arg::with_name(OPTION_FULLSCREEN)
+                .help("Instruct the window to go into fullscreen mode")
+                .long("fullscreen")
         )
 }
 
@@ -109,6 +115,21 @@ impl ImportFromSource {
     }
 }
 
+trait ResizableWhen {
+    fn resizable_when<P: Fn() -> bool>(self, predicate: P) -> Self;
+}
+
+impl ResizableWhen for WindowSettings {
+    fn resizable_when<P: Fn() -> bool>(self, predicate: P) -> Self {
+        let cond = predicate();
+        if cond {
+            self.resizable(true)
+        } else {
+            self
+        }
+    }
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     let app = app().get_matches();
 
@@ -120,8 +141,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     let img = img.to_rgba();
 
     let mut window: PistonWindow = WindowSettings::new(crate_name!(), [width, height])
-        .resizable(false)
+        .fullscreen(app.is_present(OPTION_FULLSCREEN))
         .exit_on_esc(true)
+        .resizable_when(|| app.is_present(OPTION_FULLSCREEN))
         .build()
         .map_err(|_| MiniViewError::UnableToCreateWindow)?;
 

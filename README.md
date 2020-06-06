@@ -1,6 +1,6 @@
-![github_actions_ci](https://img.shields.io/badge/github-foresterre/miniview-blue?labelColor=555555&logo=github)
-![github_actions_ci](https://img.shields.io/crates/v/miniview.svg?color=fc8d62&logo=rust)
-![github_actions_ci](https://img.shields.io/github/workflow/status/foresterre/miniview/github_actions_ci/master)
+[<img alt="github" src="https://img.shields.io/badge/github-foresterre/miniview-blue?labelColor=555555&logo=github" height="20">](https://github.com/foresterre/miniview)
+[<img alt="crates.io" src="https://img.shields.io/crates/v/miniview.svg?color=fc8d62&logo=rust" height="20">](https://crates.io/crates/miniview)
+[<img alt="ci" src="https://img.shields.io/github/workflow/status/foresterre/miniview/github_actions_ci/master" height="20">](https://github.com/foresterre/miniview/actions?query=workflow%3Agithub_actions_ci+branch%3Amaster+)
 
 # miniview
 _'mini' as in, it can't do much =)_

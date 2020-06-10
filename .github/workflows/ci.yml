@@ -70,17 +70,13 @@ jobs:
           command: build
           args: --verbose --all
 
-      - name: test_workspace_crates
+      - name: test_workspace_crates_except_macos
         uses: actions-rs/cargo@v1
+        if: ${{ matrix.build }} != macos
         with:
           command: test
           args: --verbose --all
 
-      - name: test_workspace_with_all_features
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --verbose --all --all-features
 
   rustfmt:
     name: pipeline_rustfmt

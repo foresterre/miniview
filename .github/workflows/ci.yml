@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        build: [win-gnu, win-msvc]
+        build: [stable, beta, nightly, macos, win-gnu, win-msvc]
         include:
           # latest rust stable :: ubuntu
           - build: stable
@@ -69,13 +69,6 @@ jobs:
         with:
           command: build
           args: --verbose --all
-
-      - name: test_workspace_crates_except_macos
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --verbose --all -- --test-threads=1
-
 
   rustfmt:
     name: pipeline_rustfmt

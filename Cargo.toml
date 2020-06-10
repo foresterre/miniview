@@ -18,3 +18,7 @@ piston_window = "0.89.0"
 
 anyhow = "1.0.31"
 thiserror = "1.0.19"
+
+[dev-dependencies]
+assert_cmd = "1.0.1"
+parameterized = "0.1.1"

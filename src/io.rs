@@ -2,7 +2,7 @@ use std::io::{stdin, Read};
 
 use crate::errors::{ImportError, MiniViewError};
 
-pub(crate) fn import_image_from_stdin_bytes_block() -> Result<image::DynamicImage, MiniViewError> {
+pub fn import_image_from_stdin_bytes_block() -> Result<image::DynamicImage, MiniViewError> {
     let mut buffer = Vec::new();
 
     stdin()
@@ -21,7 +21,7 @@ pub(crate) fn import_image_from_stdin_bytes_block() -> Result<image::DynamicImag
     })
 }
 
-pub(crate) fn read_path_from_stdin_block() -> Result<String, MiniViewError> {
+pub fn read_path_from_stdin_block() -> Result<String, MiniViewError> {
     let mut path = String::new();
 
     stdin()

@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        build: [stable, beta, nightly, macos, win-gnu, win-msvc]
+        build: [win-gnu, win-msvc]
         include:
           # latest rust stable :: ubuntu
           - build: stable
@@ -72,7 +72,6 @@ jobs:
 
       - name: test_workspace_crates_except_macos
         uses: actions-rs/cargo@v1
-        if: ${{ matrix.build }} != macos
         with:
           command: test
           args: --verbose --all -- --test-threads=1

@@ -75,7 +75,7 @@ jobs:
         if: ${{ matrix.build }} != macos
         with:
           command: test
-          args: --verbose --all
+          args: --verbose --all -- --test-threads=1
 
 
   rustfmt:

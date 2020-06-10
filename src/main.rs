@@ -1,17 +1,13 @@
 extern crate image as imagecrate; // There is also an image module in piston_window
 
-use crate::errors::{ImportError, MiniViewError};
-use crate::io::{import_image_from_stdin_bytes_block, read_path_from_stdin_block};
 use anyhow::Context;
 use clap::{
     crate_authors, crate_description, crate_name, crate_version, App, AppSettings, Arg, ArgMatches,
 };
-use imagecrate::DynamicImage;
-use imagecrate::GenericImageView;
-use piston_window::*;
-
-mod errors;
-mod io;
+use miniview::config::ConfigBuilder;
+use miniview::errors::MiniViewError;
+use miniview::io::read_path_from_stdin_block;
+use miniview::Source;
 
 const IMPORT_FROM_PATH_CLI: &str = "import_from_path";
 const IMPORT_FROM_STDIN_BYTES: &str = "import_from_stdin_bytes";
@@ -19,6 +15,7 @@ const IMPORT_FROM_STDIN_PATH: &str = "import_from_stdin_path";
 const POSITIONAL_FROM_PATH: &str = "positional_from_path";
 const OPTION_FULLSCREEN: &str = "fullscreen";
 const OPTION_WINDOW_RESIZE: &str = "window_resize";
+const OPTION_CLOSE_AFTER: &str = "close_after_ms";
 
 // Perhaps it will be better to use the lower level gfx tools instead of piston_window.
 fn cli() -> App<'static, 'static> {
@@ -29,7 +26,8 @@ fn cli() -> App<'static, 'static> {
         .setting(AppSettings::NextLineHelp)
         .usage("miniview (<PATH> OR --from-path <PATH> OR --from-stdin-bytes OR --from-stdin-path) \
             [--fullscreen] \
-            [--allow-window-resizing]")
+            [--allow-window-resizing] \
+            [--close-after <ms>]")
         .arg(
             Arg::with_name(IMPORT_FROM_PATH_CLI)
                 .long("from-path")
@@ -73,102 +71,68 @@ fn cli() -> App<'static, 'static> {
                 .help("Allow window resizing (doesn't resize the image)")
                 .long("allow-window-resizing")
         )
+        .arg(
+            Arg::with_name(OPTION_CLOSE_AFTER)
+                .help("Close the window after n milliseconds; implies a non-lazy window")
+                .long("close-after")
+                .takes_value(true)
+                .number_of_values(1)
+                .validator(|f| f.parse::<u64>().map(|_| ()).map_err(|_| String::from("value should be a natural number")))
+        )
 }
 
-enum ImportFromSource {
-    ByPath(String),
-    StdinBytes,
-}
+fn determine_source(matches: &ArgMatches) -> Result<Source, MiniViewError> {
+    match (
+        matches.is_present(IMPORT_FROM_PATH_CLI),
+        matches.is_present(IMPORT_FROM_STDIN_PATH),
+        matches.is_present(IMPORT_FROM_STDIN_BYTES),
+        matches.is_present(POSITIONAL_FROM_PATH),
+    ) {
+        (true, false, false, false) => {
+            let path = matches
+                .value_of(IMPORT_FROM_PATH_CLI)
+                .ok_or_else(|| MiniViewError::EmptyInputPath)?;
+            let path = Source::ByPath(path.into());
 
-impl ImportFromSource {
-    fn try_new(matches: &ArgMatches) -> Result<Self, MiniViewError> {
-        match (
-            matches.is_present(IMPORT_FROM_PATH_CLI),
-            matches.is_present(IMPORT_FROM_STDIN_PATH),
-            matches.is_present(IMPORT_FROM_STDIN_BYTES),
-            matches.is_present(POSITIONAL_FROM_PATH),
-        ) {
-            (true, false, false, false) => {
-                let path = matches
-                    .value_of(IMPORT_FROM_PATH_CLI)
-                    .ok_or_else(|| MiniViewError::EmptyInputPath)?;
-                let path = ImportFromSource::ByPath(path.to_string());
-
-                Ok(path)
-            }
-            (false, true, false, false) => {
-                Ok(ImportFromSource::ByPath(read_path_from_stdin_block()?))
-            }
-            (false, false, true, false) => Ok(ImportFromSource::StdinBytes),
-            (false, false, false, true) => {
-                let path = matches
-                    .value_of(POSITIONAL_FROM_PATH)
-                    .ok_or_else(|| MiniViewError::EmptyInputPath)?;
-                let path = ImportFromSource::ByPath(path.to_string());
-
-                Ok(path)
-            }
-            _ => Err(MiniViewError::CliUnableToDetermineInputMode),
+            Ok(path)
         }
-    }
+        (false, true, false, false) => Ok(Source::ByPath(read_path_from_stdin_block()?.into())),
+        (false, false, true, false) => Ok(Source::StdinBytes),
+        (false, false, false, true) => {
+            let path = matches
+                .value_of(POSITIONAL_FROM_PATH)
+                .ok_or_else(|| MiniViewError::EmptyInputPath)?;
+            let path = Source::ByPath(path.into());
 
-    fn open(&self) -> Result<DynamicImage, MiniViewError> {
-        match &self {
-            ImportFromSource::ByPath(path) => imagecrate::open(&path)
-                .map_err(|_| MiniViewError::FailedToImport(ImportError::OnPathNotFound)),
-            ImportFromSource::StdinBytes => import_image_from_stdin_bytes_block(),
+            Ok(path)
         }
+        _ => Err(MiniViewError::CliUnableToDetermineInputMode),
     }
 }
 
-trait ResizableWhen {
-    fn resizable_when<P: Fn() -> bool>(self, predicate: P) -> Self;
-}
+fn stop_after(start: std::time::Instant, ms: u64) -> bool {
+    let time_passed = std::time::Instant::now().duration_since(start);
 
-impl ResizableWhen for WindowSettings {
-    fn resizable_when<P: Fn() -> bool>(self, predicate: P) -> Self {
-        let cond = predicate();
-        if cond {
-            self.resizable(true)
-        } else {
-            self.resizable(false)
-        }
-    }
-}
-
-fn run_app(matches: &ArgMatches) -> Result<(), MiniViewError> {
-    let source = ImportFromSource::try_new(matches)?;
-    let img = source.open()?;
-
-    let width = img.width();
-    let height = img.height();
-    let img = img.to_rgba();
-
-    let mut window: PistonWindow = WindowSettings::new(crate_name!(), [width, height])
-        .fullscreen(matches.is_present(OPTION_FULLSCREEN))
-        .exit_on_esc(true)
-        .resizable_when(|| {
-            // if window resizing is not enabled, when setting fullscreen to true, the window won't go
-            // into fullscreen mode
-            matches.is_present(OPTION_FULLSCREEN) || matches.is_present(OPTION_WINDOW_RESIZE)
-        })
-        .build()
-        .map_err(|_| MiniViewError::UnableToCreateWindow)?;
-
-    let tex = Texture::from_image(&mut window.factory, &img, &TextureSettings::new())
-        .map_err(|_| MiniViewError::UnableToMapImage)?;
-
-    window.set_lazy(true);
-    while let Some(frame) = window.next() {
-        window.draw_2d(&frame, |c, g| {
-            image(&tex, c.transform, g);
-        });
-    }
-
-    Ok(())
+    time_passed >= std::time::Duration::from_millis(ms)
 }
 
 fn main() -> anyhow::Result<()> {
     let matches = cli().get_matches();
-    run_app(&matches).with_context(|| "miniview failed")
+    let source = determine_source(&matches)?;
+
+    let mut builder = ConfigBuilder::new(source)
+        .set_fullscreen(matches.is_present(OPTION_FULLSCREEN))
+        .allow_resizable_window(matches.is_present(OPTION_WINDOW_RESIZE));
+
+    if let Some(ms) = matches.value_of(OPTION_CLOSE_AFTER) {
+        let time = ms.parse::<u64>()?;
+        let start = std::time::Instant::now();
+
+        builder = builder.close_window_when(Some(Box::new(move || stop_after(start, time))));
+        builder = builder.set_lazy_window(false);
+    }
+
+    let config = builder.build();
+
+    miniview::show(&config).with_context(|| "miniview failed")
 }

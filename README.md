@@ -15,7 +15,7 @@ With [cargo](https://crates.io/crates/miniview) install: `cargo install --force 
 Pre build binary: see [releases](https://github.com/foresterre/miniview/releases)
 
 
-# Usage
+# Usage (binary)
 
 | Usage | Linux example | Windows example (cmd.exe) |
 |----------------------------------------|------------------------------------------------|------------------------------------------------|
@@ -32,12 +32,38 @@ Pre build binary: see [releases](https://github.com/foresterre/miniview/releases
 | ---    | ---         |
 | `--fullscreen` | Set the window to fullscreen |
 | `--allow-window-resizing` | Allow the window to resize (doesn't resize the image!) |
+| `--close-after <n>` | Close the window after `n` milliseconds |
 
 <br>
 
 **Keyboard shortcuts**
 
 Press `ESC` to exit the image window.
+
+# Usage example (library)
+
+```rust
+use miniview::config::ConfigBuilder;
+use std::time::Duration;
+
+fn main() {
+    let start = std::time::Instant::now();
+
+    let timer = Box::new(move || {
+        let time_passed = std::time::Instant::now().duration_since(start);
+        time_passed >= Duration::new(1, 0)
+    });
+
+    let config =
+        ConfigBuilder::from_path(concat!(env!("CARGO_MANIFEST_DIR"), "/resources/plant.jpg"))
+            .set_fullscreen(true)
+            .set_lazy_window(false)
+            .close_window_when(Some(timer))
+            .build();
+
+    miniview::show(&config).unwrap()
+}
+```
 
 # Suggestions, Questions, Bugs
 

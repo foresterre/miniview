@@ -1,3 +1,5 @@
+// NOTE: This is not actually an example!
+//
 // Copyright © 2018 Martijn Gribnau
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and

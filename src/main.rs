@@ -116,16 +116,16 @@ fn main() -> anyhow::Result<()> {
 
     let config = ConfigBuilder::new(source)
         .set_fullscreen(matches.is_present(OPTION_FULLSCREEN))
-        .allow_resizable_window(matches.is_present(OPTION_WINDOW_RESIZE))
-        .build();
-
-    let controls = MiniView::show(config)?;
+        .allow_resizable_window(matches.is_present(OPTION_WINDOW_RESIZE));
 
     if let Some(close_after) = matches.value_of(OPTION_CLOSE_AFTER) {
         let time = close_after.parse::<u64>()?;
+        let controls = MiniView::show(config.build())?;
         std::thread::sleep(Duration::from_millis(time));
         controls.close()?;
     } else {
+        let config = config.set_lazy_window(true).build();
+        let controls = MiniView::show(config)?;
         controls.wait_for_exit()?;
     }
 

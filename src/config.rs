@@ -6,7 +6,6 @@ pub struct Config {
     fullscreen: bool,
     resizable_window: bool,
     lazy_window: bool,
-    exit_when: Option<Box<dyn Fn() -> bool>>,
     window_name: &'static str,
 }
 
@@ -30,13 +29,9 @@ impl Config {
     pub fn window_name(&self) -> &str {
         self.window_name
     }
-
-    pub fn exit_when(&self) -> Option<&dyn Fn() -> bool> {
-        self.exit_when.as_ref().map(|inner| inner.as_ref())
-    }
 }
 
-impl<'a> Debug for Config {
+impl<'window_name> Debug for Config {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.write_str(&format!("Config(source = {:?}, fullscreen = {:?}, resizable_window = {:?}, window_name = {:?}, ...)",
                              self.source, self.fullscreen, self.resizable_window, self.window_name))
@@ -48,16 +43,15 @@ pub struct ConfigBuilder {
     config: Config,
 }
 
-impl<'a> ConfigBuilder {
+impl ConfigBuilder {
     pub fn new(source: Source) -> Self {
         ConfigBuilder {
             config: Config {
                 source,
                 fullscreen: false,
                 resizable_window: false,
-                lazy_window: true,
+                lazy_window: false,
                 window_name: "miniview",
-                exit_when: None,
             },
         }
     }
@@ -99,15 +93,6 @@ impl<'a> ConfigBuilder {
     /// Title of the window; useful when trying to capture the window from another program.
     pub fn window_name(mut self, value: &'static str) -> Self {
         self.config.window_name = value;
-        self
-    }
-
-    /// Close the window in certain cases.
-    ///
-    /// Warning: if the window uses lazy updates, this may not work as intended (as user interaction
-    /// is required to poll successive window events).
-    pub fn close_window_when(mut self, value: Option<Box<dyn Fn() -> bool>>) -> Self {
-        self.config.exit_when = value;
         self
     }
 

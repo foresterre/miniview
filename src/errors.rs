@@ -11,11 +11,17 @@ pub enum MiniViewError {
     #[error("Unable to determine input mode.")]
     CliUnableToDetermineInputMode,
 
+    #[error("Unable to signal window to stop showing")]
+    SendStopError,
+
     #[error("Unable to create a window to display the image.")]
     UnableToCreateWindow,
 
     #[error("Unable to map the image to a texture.")]
     UnableToMapImage,
+
+    #[error("View thread exited improperly")]
+    ViewThreadFailedToJoin,
 }
 
 #[derive(Error, Debug)]

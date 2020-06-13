@@ -63,7 +63,6 @@ impl ImageWindow {
     pub fn try_new(config: &Config, size: [u32; 2]) -> MVResult<ImageWindow> {
         let mut window: PistonWindow = WindowSettings::new(crate_name!(), size)
             .fullscreen(config.fullscreen())
-            .exit_on_esc(true)
             .resizable_when(|| {
                 // if window resizing is not enabled, when setting fullscreen to true, the window won't go
                 // into fullscreen mode
@@ -142,7 +141,7 @@ impl MiniView {
                             return Ok(());
                         }
                         Event::Input(Input::Button(ButtonArgs { button, .. }))
-                            if button == Button::Keyboard(Key::Escape) =>
+                            if button == Button::Keyboard(Key::Escape) && config.exit_on_esc() =>
                         {
                             window.close_window();
                             return Ok(());

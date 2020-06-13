@@ -7,6 +7,7 @@ pub struct Config {
     resizable_window: bool,
     lazy_window: bool,
     window_name: &'static str,
+    exit_on_esc: bool,
 }
 
 impl Config {
@@ -28,6 +29,10 @@ impl Config {
 
     pub fn window_name(&self) -> &str {
         self.window_name
+    }
+
+    pub fn exit_on_esc(&self) -> bool {
+        self.exit_on_esc
     }
 }
 
@@ -52,6 +57,7 @@ impl ConfigBuilder {
                 resizable_window: false,
                 lazy_window: false,
                 window_name: "miniview",
+                exit_on_esc: true,
             },
         }
     }
@@ -93,6 +99,12 @@ impl ConfigBuilder {
     /// Title of the window; useful when trying to capture the window from another program.
     pub fn window_name(mut self, value: &'static str) -> Self {
         self.config.window_name = value;
+        self
+    }
+
+    /// Whether to signal the window to close upon pressing the escape (ESC) key
+    pub fn exit_on_esc(mut self, value: bool) -> Self {
+        self.config.exit_on_esc = value;
         self
     }
 

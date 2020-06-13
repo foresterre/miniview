@@ -1,13 +1,13 @@
 extern crate image as imagecrate; // There is also an image module in piston_window
 
-use anyhow::Context;
 use clap::{
     crate_authors, crate_description, crate_name, crate_version, App, AppSettings, Arg, ArgMatches,
 };
 use miniview::config::ConfigBuilder;
 use miniview::errors::MiniViewError;
 use miniview::io::read_path_from_stdin_block;
-use miniview::Source;
+use miniview::{MiniView, Source};
+use std::time::Duration;
 
 const IMPORT_FROM_PATH_CLI: &str = "import_from_path";
 const IMPORT_FROM_STDIN_BYTES: &str = "import_from_stdin_bytes";
@@ -110,29 +110,24 @@ fn determine_source(matches: &ArgMatches) -> Result<Source, MiniViewError> {
     }
 }
 
-fn stop_after(start: std::time::Instant, ms: u64) -> bool {
-    let time_passed = std::time::Instant::now().duration_since(start);
-
-    time_passed >= std::time::Duration::from_millis(ms)
-}
-
 fn main() -> anyhow::Result<()> {
     let matches = cli().get_matches();
     let source = determine_source(&matches)?;
 
-    let mut builder = ConfigBuilder::new(source)
+    let config = ConfigBuilder::new(source)
         .set_fullscreen(matches.is_present(OPTION_FULLSCREEN))
-        .allow_resizable_window(matches.is_present(OPTION_WINDOW_RESIZE));
+        .allow_resizable_window(matches.is_present(OPTION_WINDOW_RESIZE))
+        .build();
 
-    if let Some(ms) = matches.value_of(OPTION_CLOSE_AFTER) {
-        let time = ms.parse::<u64>()?;
-        let start = std::time::Instant::now();
+    let controls = MiniView::show(config)?;
 
-        builder = builder.close_window_when(Some(Box::new(move || stop_after(start, time))));
-        builder = builder.set_lazy_window(false);
+    if let Some(close_after) = matches.value_of(OPTION_CLOSE_AFTER) {
+        let time = close_after.parse::<u64>()?;
+        std::thread::sleep(Duration::from_millis(time));
+        controls.close()?;
+    } else {
+        controls.wait_for_exit()?;
     }
 
-    let config = builder.build();
-
-    miniview::show(&config).with_context(|| "miniview failed")
+    Ok(())
 }

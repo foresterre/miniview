@@ -1,7 +1,11 @@
+//! Convenience functions to load a bytestream representing a path to an image or the image itself
+//! from the stdin pipe.
+
 use std::io::{stdin, Read};
 
 use crate::errors::{ImportError, MiniViewError};
 
+/// Load an image from stdin (blocks the thread)
 pub fn import_image_from_stdin_bytes_block() -> Result<image::DynamicImage, MiniViewError> {
     let mut buffer = Vec::new();
 
@@ -21,6 +25,7 @@ pub fn import_image_from_stdin_bytes_block() -> Result<image::DynamicImage, Mini
     })
 }
 
+// Read a path which should point to an image file from stdin (blocks the thread)
 pub fn read_path_from_stdin_block() -> Result<String, MiniViewError> {
     let mut path = String::new();
 

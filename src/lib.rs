@@ -134,7 +134,7 @@ impl ImageWindow {
     }
 
     fn draw_image<E: GenericEvent>(&mut self, event: &E, texture: &G2dTexture) {
-        self.window.draw_2d(event, |c, g| {
+        self.window.draw_2d(event, |c, g, _device| {
             image(texture, c.transform, g);
         });
     }
@@ -143,8 +143,8 @@ impl ImageWindow {
         self.window.set_should_close(true);
     }
 
-    fn device_factory(&self) -> GfxFactory {
-        self.window.factory.clone()
+    fn create_texture_context(&mut self) -> G2dTextureContext {
+        self.window.create_texture_context()
     }
 }
 
@@ -192,9 +192,12 @@ impl MiniView {
         let handle = thread::spawn(move || {
             let mut window = ImageWindow::try_new(&config, [width, height])?;
 
-            let texture =
-                Texture::from_image(&mut window.device_factory(), &img, &TextureSettings::new())
-                    .map_err(|_| MiniViewError::UnableToMapImage)?;
+            let texture = Texture::from_image(
+                &mut window.create_texture_context(),
+                &img,
+                &TextureSettings::new(),
+            )
+            .map_err(|_| MiniViewError::UnableToMapImage)?;
 
             loop {
                 if let Ok(action) = receiver.try_recv() {
@@ -208,11 +211,11 @@ impl MiniView {
 
                 if let Some(event) = window.next() {
                     match event {
-                        Event::Input(Input::Close(_)) => {
+                        Event::Input(Input::Close(_), _) => {
                             window.close_window();
                             return Ok(());
                         }
-                        Event::Input(Input::Button(ButtonArgs { button, .. }))
+                        Event::Input(Input::Button(ButtonArgs { button, .. }), _)
                             if button == Button::Keyboard(Key::Escape) =>
                         {
                             window.close_window();

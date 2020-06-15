@@ -20,20 +20,17 @@
 //! use miniview::{ConfigBuilder, MiniView};
 //! use std::time::Duration;
 //!
-//! fn main() {
-//!     let config =
-//!         ConfigBuilder::from_path(concat!(env!("CARGO_MANIFEST_DIR"), "/resources/plant.jpg"))
-//!             .set_fullscreen(true)
-//!             .build();
+//! let config = ConfigBuilder::from_path(concat!(env!("CARGO_MANIFEST_DIR"), "/resources/plant.jpg"))
+//!         .set_fullscreen(true)
+//!         .build();
 //!
-//!     let controls = MiniView::show(config).expect("unable to create miniview");
+//! let controls = MiniView::show(config).expect("unable to create miniview");
 //!
-//!     // do some important other work!
-//!     std::thread::sleep(Duration::from_millis(1000));
+//! // do some important other work!
+//! std::thread::sleep(Duration::from_millis(1000));
 //!
-//!     let closed = controls.close();
-//!     assert!(closed.is_ok());
-//! }
+//! let closed = controls.close();
+//! assert!(closed.is_ok());
 //! ```
 //!
 //! [`issue tracker`]: https://github.com/foresterre/miniview/issues

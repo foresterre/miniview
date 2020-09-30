@@ -12,7 +12,7 @@ categories = ["graphics", "command-line-utilities"]
 exclude = ["resources/*", ".idea", "*.iml", ".vscode"]
 
 [dependencies]
-image = "0.23.9"
+image = "0.23.10"
 clap = "2.33.3"
 piston_window = "0.113.0"
 

@@ -17,7 +17,7 @@ clap = "2.33.3"
 piston_window = "0.114.0"
 
 anyhow = "1.0.33"
-thiserror = "1.0.21"
+thiserror = "1.0.22"
 
 [dev-dependencies]
 assert_cmd = "1.0.1"

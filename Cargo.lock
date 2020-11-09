@@ -955,9 +955,9 @@ dependencies = [
 
 [[package]]
 name = "piston_window"
-version = "0.113.0"
+version = "0.114.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "75ddb469b647f4d923cf178590334e45449cd51c6aaf224ba621438f19a6aa84"
+checksum = "2db7f49cc383b3669da773c7f5d73876503bbeea56a1f599b1e5e0db412aec7e"
 dependencies = [
  "gfx",
  "gfx_device_gl",
@@ -981,9 +981,9 @@ dependencies = [
 
 [[package]]
 name = "pistoncore-glutin_window"
-version = "0.66.0"
+version = "0.67.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1fb21dcf638ce1c28bc31c76bae90f3589b395ace8918e3c6a328558fca41275"
+checksum = "4affa7d466dfe757fb7bcd882b9c07dbbb31e5ef07091448c98dceb2ebbf5f87"
 dependencies = [
  "gl",
  "glutin",

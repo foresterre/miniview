@@ -16,7 +16,7 @@ image = "0.23.11"
 clap = "2.33.3"
 piston_window = "0.114.0"
 
-anyhow = "1.0.33"
+anyhow = "1.0.34"
 thiserror = "1.0.22"
 
 [dev-dependencies]

@@ -920,9 +920,9 @@ checksum = "2c10c0d7a00f671e717ab98aa2c7f7bf204082d0e6b246827dc17b68bbaf8d18"
 
 [[package]]
 name = "piston-shaders_graphics2d"
-version = "0.3.1"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "97bc17dac1dfff3e5cb84116062c7b46ff9d3dc0d88696a46d2f054cf64a10b6"
+checksum = "3a35f4d08d2b6fd7ff02baab63346d4b7d2fdd5ac3f2e091a5128c22c77a489a"
 
 [[package]]
 name = "piston-texture"
@@ -941,9 +941,9 @@ dependencies = [
 
 [[package]]
 name = "piston2d-gfx_graphics"
-version = "0.71.1"
+version = "0.72.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d711cce0f43cee0cb788de2d061d935b93a467392d7e1a353c07c0ca0a82f5ed"
+checksum = "8b0031c98b281028b0f7a2fdfd926354f361f29a378434223f24c81854f257c6"
 dependencies = [
  "draw_state",
  "gfx",
@@ -955,9 +955,9 @@ dependencies = [
 
 [[package]]
 name = "piston2d-graphics"
-version = "0.38.0"
+version = "0.39.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1872da7b60a53fd80f42679dc942be76c5522a34e8cbc17b476851dcd4d83a06"
+checksum = "d202b6ca097b66afdde8f31b434a54c58576c461d003c90f919ed5a086c39805"
 dependencies = [
  "fnv",
  "interpolation",
@@ -970,9 +970,9 @@ dependencies = [
 
 [[package]]
 name = "piston_window"
-version = "0.115.0"
+version = "0.116.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4aba278ffbc1a5c175822b1a78a1d26bee654b4ca2f398dcdc268552fcee85ad"
+checksum = "1bcf267acee956e14e17ff9896ca4a31dc42606e626a58ef1bea0acceb43a003"
 dependencies = [
  "gfx",
  "gfx_device_gl",

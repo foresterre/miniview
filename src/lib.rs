@@ -187,7 +187,7 @@ impl MiniView {
 
         let width = img.width();
         let height = img.height();
-        let img = img.to_rgba();
+        let img = img.to_rgba8();
 
         let handle = thread::spawn(move || {
             let mut window = ImageWindow::try_new(&config, [width, height])?;

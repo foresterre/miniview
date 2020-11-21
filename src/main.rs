@@ -91,7 +91,7 @@ fn determine_source(matches: &ArgMatches) -> Result<Source, MiniViewError> {
         (true, false, false, false) => {
             let path = matches
                 .value_of(IMPORT_FROM_PATH_CLI)
-                .ok_or_else(|| MiniViewError::EmptyInputPath)?;
+                .ok_or(MiniViewError::EmptyInputPath)?;
             let path = Source::ByPath(path.into());
 
             Ok(path)
@@ -101,7 +101,7 @@ fn determine_source(matches: &ArgMatches) -> Result<Source, MiniViewError> {
         (false, false, false, true) => {
             let path = matches
                 .value_of(POSITIONAL_FROM_PATH)
-                .ok_or_else(|| MiniViewError::EmptyInputPath)?;
+                .ok_or(MiniViewError::EmptyInputPath)?;
             let path = Source::ByPath(path.into());
 
             Ok(path)

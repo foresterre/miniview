@@ -9,3 +9,6 @@ updates:
   - foresterre
   labels:
   - C-dependency-update
+  allow:
+  - dependency-type: direct
+  - dependency-type: indirect

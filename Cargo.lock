@@ -1076,9 +1076,9 @@ checksum = "fb3dbeaaf793584e29c58c7e3a82bbb3c7c06b63cea68d13b0e3cddc124104dc"
 
 [[package]]
 name = "predicates-tree"
-version = "1.0.0"
+version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e63c4859013b38a76eca2414c64911fba30def9e3202ac461a2d22831220124"
+checksum = "aee95d988ee893cb35c06b148c80ed2cd52c8eea927f50ba7a0be1a786aeab73"
 dependencies = [
  "predicates-core",
  "treeline",

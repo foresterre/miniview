@@ -16,8 +16,8 @@ image = "0.23.12"
 clap = "2.33.3"
 piston_window = "0.116.0"
 
-anyhow = "1.0.35"
-thiserror = "1.0.22"
+anyhow = "1.0.37"
+thiserror = "1.0.23"
 
 [dev-dependencies]
 assert_cmd = "1.0.2"

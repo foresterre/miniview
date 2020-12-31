@@ -21,4 +21,4 @@ thiserror = "1.0.23"
 
 [dev-dependencies]
 assert_cmd = "1.0.2"
-parameterized = "0.2.0"
+parameterized = "0.3.0"

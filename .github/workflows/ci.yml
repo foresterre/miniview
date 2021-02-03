@@ -65,11 +65,18 @@ jobs:
           override: true
           profile: minimal
 
-      - name: build_workspace_crates
+      - name: build_backend_piston_window
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --verbose --all
+          args: --verbose --all --features backend_piston_window --no-default-features
+
+      - name: build_backend_pixels
+        uses: actions-rs/cargo@v1
+        if:  matrix.build != 'macos' # unsupported
+        with:
+          command: build
+          args: --verbose --all --features backend_pixels --no-default-features
 
   rustfmt:
     name: pipeline_rustfmt
@@ -101,11 +108,16 @@ jobs:
           override: true
           profile: minimal
           components: clippy
-      - name: check_with_clippy
+      - name: check_with_clippy_backend_piston_window
         uses: actions-rs/clippy-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-targets --all-features -- -D warnings
+          args: --all-targets --no-default-features --features backend_piston_window -- -D warnings
+      - name: check_with_clippy_backend_pixels
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-targets --no-default-features --features backend_pixels -- -D warnings
 
   cargo_deny:
     name: pipeline_cargo_deny

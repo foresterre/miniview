@@ -14,7 +14,7 @@
 //!
 //! Feel free to post questions, issues, suggestions and feedback at the [`issue tracker`].
 //!
-//! Example usage:
+//! # Example usage:
 //!
 //! ```rust
 //! use miniview::{ConfigBuilder, MiniView};
@@ -33,8 +33,86 @@
 //! assert!(closed.is_ok());
 //! ```
 //!
+//! # Backends
+//!
+//! MiniView supports two backends: piston-window and pixels. You can switch between backends on compile time. This requires
+//! setting Cargo [features](https://doc.rust-lang.org/cargo/reference/features.html). The piston-window backend can be
+//! enabled using the `backend_piston_window` feature, and the pixels backend can be enabled using the `backend_pixels` feature.
+//!
+//! The default backend is **pixels**. This backend will be used if no-default-features is not specified.
+//!
+//! The next sections provide examples, on how to enable each backend. Only one backend should be enabled at a time.
+//!
+//! ## backend: piston-window
+//!
+//! ### Platform support
+//!
+//! Supported platforms:
+//! * any platform supported by [piston-window](https://github.com/PistonDevelopers/piston_window) with Glutin, including:
+//! * Linux
+//! * MacOS
+//! * Windows
+//!
+//! ### Configuration examples
+//!
+//! When building MiniView, the piston-window backend can be used by compiling with:
+//! ```bash
+//! cargo run --no-default-features --features backend_piston_window
+//! ```
+//!
+//! When using MiniView as a library, you can use:
+//! ```toml
+//! [dependencies.miniview]
+//! version = "*" # select the latest version here
+//! default-features = false
+//! features = ["backend_piston_window"]
+//! ```
+//!
+//! or
+//!
+//! ```toml
+//! [dependencies]
+//! miniview = { version = "*", default-features = false, features = ["backend_piston_window"] }
+//! ```
+//!
+//! ## backend: pixels
+//!
+//! ### Platform support
+//!
+//! Supported platforms:
+//! * Linux
+//! * Dragonfly
+//! * FreeBSD
+//! * NetBSD
+//! * OpenBSD
+//! * Windows
+//!
+//! Note: MacOS is not yet supported for this backend.
+//!
+//! ### Configuration examples
+//!
+//! When building MiniView, the pixels backend can be used by compiling with:
+//! ```bash
+//! cargo run --no-default-features --features backend_pixels
+//! ```
+//!
+//! When using MiniView as a library, you can use:
+//! ```toml
+//! [dependencies.miniview]
+//! version = "*" # select the latest version here
+//! default-features = false
+//! features = ["backend_pixels"]
+//! ```
+//!
+//! or
+//!
+//! ```toml
+//! [dependencies]
+//! miniview = { version = "*", default-features = false, features = ["backend_pixels"] }
+//! ```
+//!
 //! [`issue tracker`]: https://github.com/foresterre/miniview/issues
-//! [`readme`]: https://github.com/foresterre/miniview/blob/master/README.md
+//! [`readme`]: https://github.com/foresterre/miniview/blob/main/README.md
 //! [`MiniView.show`]: struct.MiniView.html#method.show
 //! [`ConfigBuilder`]: config/struct.ConfigBuilder.html
 
@@ -43,16 +121,19 @@ extern crate image as imagecrate; // There is also an image module in piston_win
 use crate::config::Config;
 use crate::errors::ImportError;
 use crate::io::import_image_from_stdin_bytes_block;
-use clap::crate_name;
-use imagecrate::{DynamicImage, GenericImageView};
-use piston_window::*;
-use std::fmt::{Debug, Formatter};
+use imagecrate::DynamicImage;
+use std::fmt::Debug;
 use std::path::PathBuf;
 use std::sync::mpsc;
 use std::thread;
 
 pub use crate::config::ConfigBuilder;
 pub use crate::errors::MiniViewError;
+
+#[cfg(feature = "backend_piston_window")]
+pub(crate) mod backend_piston_window;
+#[cfg(feature = "backend_pixels")]
+pub(crate) mod backend_pixels;
 
 pub mod config;
 pub mod errors;
@@ -69,14 +150,8 @@ trait ResizableWhen {
     fn resizable_when<P: Fn() -> bool>(self, predicate: P) -> Self;
 }
 
-impl ResizableWhen for WindowSettings {
-    fn resizable_when<P: Fn() -> bool>(self, predicate: P) -> Self {
-        if predicate() {
-            self.resizable(true)
-        } else {
-            self.resizable(false)
-        }
-    }
+trait FullscreenWhen {
+    fn fullscreen_when<P: Fn() -> bool>(self, predicate: P) -> Self;
 }
 
 /// The source of an image which will be shown by the view
@@ -107,53 +182,6 @@ enum Action {
     Close,
 }
 
-struct ImageWindow {
-    window: PistonWindow,
-}
-
-impl ImageWindow {
-    pub fn try_new(config: &Config, size: [u32; 2]) -> MVResult<ImageWindow> {
-        let mut window: PistonWindow = WindowSettings::new(crate_name!(), size)
-            .fullscreen(config.fullscreen())
-            .exit_on_esc(true)
-            .resizable_when(|| {
-                // if window resizing is not enabled, when setting fullscreen to true, the window won't go
-                // into fullscreen mode
-                config.fullscreen() || config.resizable_window()
-            })
-            .build()
-            .map_err(|_| MiniViewError::UnableToCreateWindow)?;
-
-        window.set_lazy(config.lazy_window());
-
-        Ok(Self { window })
-    }
-
-    fn next(&mut self) -> Option<Event> {
-        self.window.next()
-    }
-
-    fn draw_image<E: GenericEvent>(&mut self, event: &E, texture: &G2dTexture) {
-        self.window.draw_2d(event, |c, g, _device| {
-            image(texture, c.transform, g);
-        });
-    }
-
-    fn close_window(&mut self) {
-        self.window.set_should_close(true);
-    }
-
-    fn create_texture_context(&mut self) -> G2dTextureContext {
-        self.window.create_texture_context()
-    }
-}
-
-impl Debug for ImageWindow {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("ImageWindow").finish()
-    }
-}
-
 /// Provides the controls to show and consecutively close a `miniview` window
 ///
 /// For more, see [`show`].
@@ -180,56 +208,15 @@ impl MiniView {
     /// [`close`]: struct.MiniView.html#method.close
     /// [`wait_for_exit`]: struct.MiniView.html#method.wait_for_exit
     pub fn show(config: Config) -> MVResult<Self> {
-        let (sender, receiver) = mpsc::channel();
+        #[cfg(feature = "backend_piston_window")]
+        {
+            backend_piston_window::show(config)
+        }
 
-        let source = config.source();
-        let img = source.open()?;
-
-        let width = img.width();
-        let height = img.height();
-        let img = img.to_rgba8();
-
-        let handle = thread::spawn(move || {
-            let mut window = ImageWindow::try_new(&config, [width, height])?;
-
-            let texture = Texture::from_image(
-                &mut window.create_texture_context(),
-                &img,
-                &TextureSettings::new(),
-            )
-            .map_err(|_| MiniViewError::UnableToMapImage)?;
-
-            loop {
-                if let Ok(action) = receiver.try_recv() {
-                    return match action {
-                        Action::Close => {
-                            window.close_window();
-                            Ok(())
-                        }
-                    };
-                }
-
-                if let Some(event) = window.next() {
-                    match event {
-                        Event::Input(Input::Close(_), _) => {
-                            window.close_window();
-                            return Ok(());
-                        }
-                        Event::Input(Input::Button(ButtonArgs { button, .. }), _)
-                            if button == Button::Keyboard(Key::Escape) =>
-                        {
-                            window.close_window();
-                            return Ok(());
-                        }
-                        Event::Loop(Loop::AfterRender(_)) => continue,
-                        _ => {}
-                    }
-                    window.draw_image(&event, &texture);
-                }
-            }
-        });
-
-        Ok(Self { sender, handle })
+        #[cfg(feature = "backend_pixels")]
+        {
+            backend_pixels::show(config)
+        }
     }
 
     /// Sends a 'close window' event to the thread managing the graphical window and waits for the
@@ -241,14 +228,7 @@ impl MiniView {
     ///
     /// [`wait_for_exit`]: struct.MiniView.html#method.wait_for_exit
     pub fn close(self) -> MVResult<()> {
-        self.sender
-            .send(Action::Close)
-            .map_err(|_err| MiniViewError::SendStopError)?;
-
-        self.handle
-            .join()
-            .map_err(|_err| MiniViewError::ViewThreadFailedToJoin)
-            .and_then(|inner| inner)
+        close(self)
     }
 
     /// Waits until the thread managing the graphical window returns
@@ -258,9 +238,27 @@ impl MiniView {
     ///
     /// [`close`]: struct.MiniView.html#method.close
     pub fn wait_for_exit(self) -> MVResult<()> {
-        self.handle
-            .join()
-            .map_err(|_err| MiniViewError::ViewThreadFailedToJoin)
-            .and_then(|inner| inner)
+        wait_for_exit(self)
     }
+}
+
+pub(crate) fn close(mini_view: MiniView) -> MVResult<()> {
+    mini_view
+        .sender
+        .send(Action::Close)
+        .map_err(|_err| MiniViewError::SendStopError)?;
+
+    mini_view
+        .handle
+        .join()
+        .map_err(|_err| MiniViewError::ViewThreadFailedToJoin)
+        .and_then(|inner| inner)
+}
+
+pub(crate) fn wait_for_exit(mini_view: MiniView) -> MVResult<()> {
+    mini_view
+        .handle
+        .join()
+        .map_err(|_err| MiniViewError::ViewThreadFailedToJoin)
+        .and_then(|inner| inner)
 }

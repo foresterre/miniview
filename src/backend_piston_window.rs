@@ -119,24 +119,3 @@ pub(crate) fn show(config: Config) -> MVResult<MiniView> {
 
     Ok(MiniView { sender, handle })
 }
-
-pub(crate) fn close(mini_view: MiniView) -> MVResult<()> {
-    mini_view
-        .sender
-        .send(Action::Close)
-        .map_err(|_err| MiniViewError::SendStopError)?;
-
-    mini_view
-        .handle
-        .join()
-        .map_err(|_err| MiniViewError::ViewThreadFailedToJoin)
-        .and_then(|inner| inner)
-}
-
-pub(crate) fn wait_for_exit(mini_view: MiniView) -> MVResult<()> {
-    mini_view
-        .handle
-        .join()
-        .map_err(|_err| MiniViewError::ViewThreadFailedToJoin)
-        .and_then(|inner| inner)
-}

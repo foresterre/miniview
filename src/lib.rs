@@ -72,6 +72,10 @@ trait ResizableWhen {
     fn resizable_when<P: Fn() -> bool>(self, predicate: P) -> Self;
 }
 
+trait FullscreenWhen {
+    fn fullscreen_when<P: Fn() -> bool>(self, predicate: P) -> Self;
+}
+
 /// The source of an image which will be shown by the view
 #[derive(Debug, Clone)]
 pub enum Source {
@@ -146,15 +150,7 @@ impl MiniView {
     ///
     /// [`wait_for_exit`]: struct.MiniView.html#method.wait_for_exit
     pub fn close(self) -> MVResult<()> {
-        #[cfg(feature = "backend_piston_window")]
-        {
-            backend_piston_window::close(self)
-        }
-
-        #[cfg(feature = "backend_pixels")]
-        {
-            backend_pixels::close(self)
-        }
+        close(self)
     }
 
     /// Waits until the thread managing the graphical window returns
@@ -164,14 +160,27 @@ impl MiniView {
     ///
     /// [`close`]: struct.MiniView.html#method.close
     pub fn wait_for_exit(self) -> MVResult<()> {
-        #[cfg(feature = "backend_piston_window")]
-        {
-            backend_piston_window::wait_for_exit(self)
-        }
-
-        #[cfg(feature = "backend_pixels")]
-        {
-            backend_pixels::wait_for_exit(self)
-        }
+        wait_for_exit(self)
     }
+}
+
+pub(crate) fn close(mini_view: MiniView) -> MVResult<()> {
+    mini_view
+        .sender
+        .send(Action::Close)
+        .map_err(|_err| MiniViewError::SendStopError)?;
+
+    mini_view
+        .handle
+        .join()
+        .map_err(|_err| MiniViewError::ViewThreadFailedToJoin)
+        .and_then(|inner| inner)
+}
+
+pub(crate) fn wait_for_exit(mini_view: MiniView) -> MVResult<()> {
+    mini_view
+        .handle
+        .join()
+        .map_err(|_err| MiniViewError::ViewThreadFailedToJoin)
+        .and_then(|inner| inner)
 }

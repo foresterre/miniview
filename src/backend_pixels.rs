@@ -81,6 +81,11 @@ pub(crate) fn show(config: Config) -> MVResult<MiniView> {
         };
 
         event_loop.run(move |event, _target, control_flow| {
+            // Pause event loop to save cpu time and power
+            if config.lazy_window() {
+                *control_flow = ControlFlow::Wait;
+            }
+
             // Exit when receiving the Close action
             if let Ok(action) = receiver.try_recv() {
                 match action {

@@ -8,9 +8,17 @@ use std::sync::mpsc;
 use std::thread;
 use winit::event::{Event, VirtualKeyCode};
 use winit::event_loop::{ControlFlow, EventLoop};
-#[cfg(unix)]
+#[cfg(target_os = "macos")]
+use winit::platform::macos::EventLoopWindowTargetExtMacOS;
+#[cfg(any(
+    target_os = "linux",
+    target_os = "dragonfly",
+    target_os = "freebsd",
+    target_os = "netbsd",
+    target_os = "openbsd"
+))]
 use winit::platform::unix::EventLoopExtUnix;
-#[cfg(windows)]
+#[cfg(target_os = "windows")]
 use winit::platform::windows::EventLoopExtWindows;
 use winit::window::{Fullscreen, WindowBuilder};
 use winit_input_helper::WinitInputHelper;

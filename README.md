@@ -74,7 +74,8 @@ MiniView supports two backends: piston-window and pixels. You can switch between
 setting Cargo [features](https://doc.rust-lang.org/cargo/reference/features.html). The piston-window backend can be
 enabled using the `backend_piston_window` feature, and the pixels backend can be enabled using the `backend_pixels` feature.
 
-The default backend is **piston-window**. This backend will be used if no-default-features is not specified. 
+The default backend is **pixels**. This backend will be used if no-default-features is not specified. Note that the default backend
+is not available on MacOS.
 
 The next sections provide examples, on how to enable each backend. Only one backend should be enabled at a time.
 

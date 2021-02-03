@@ -65,11 +65,17 @@ jobs:
           override: true
           profile: minimal
 
-      - name: build_workspace_crates
+      - name: build_backend_piston_window
         uses: actions-rs/cargo@v1
         with:
           command: build
           args: --verbose --all
+
+      - name: build_backend_pixels
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --verbose --all  --features backend_pixels --no-default-features
 
   rustfmt:
     name: pipeline_rustfmt

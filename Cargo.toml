@@ -12,7 +12,7 @@ categories = ["graphics", "command-line-utilities"]
 exclude = ["resources/*", ".idea", "*.iml", ".vscode"]
 
 [features]
-default = ["backend_piston_window"]
+default = ["backend_pixels"]
 backend_piston_window = ["piston_window"]
 backend_pixels = ["pixels", "winit", "winit_input_helper"]
 

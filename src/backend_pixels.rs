@@ -8,8 +8,6 @@ use std::sync::mpsc;
 use std::thread;
 use winit::event::{Event, VirtualKeyCode};
 use winit::event_loop::{ControlFlow, EventLoop};
-#[cfg(target_os = "macos")]
-use winit::platform::macos::EventLoopWindowTargetExtMacOS;
 #[cfg(any(
     target_os = "linux",
     target_os = "dragonfly",
@@ -76,7 +74,21 @@ pub(crate) fn show(config: Config) -> MVResult<MiniView> {
     let img = img.to_rgba8();
 
     let handle = thread::spawn(move || {
+        #[cfg(any(
+            target_os = "linux",
+            target_os = "dragonfly",
+            target_os = "freebsd",
+            target_os = "netbsd",
+            target_os = "openbsd",
+            target_os = "windows"
+        ))]
         let event_loop = winit::event_loop::EventLoop::new_any_thread();
+
+        // FIXME: this will probably crash, since we explicitly start the event loop off thread.
+        //   As a result, macos is not supported for now
+        #[cfg(target_os = "macos")]
+        let event_loop = winit::event_loop::EventLoop::new();
+
         let mut input = WinitInputHelper::new();
         let image_window = ImageWindow::try_new(&config, [width, height], &event_loop)?;
 

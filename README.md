@@ -8,6 +8,10 @@ _'mini' as in, it can't do much =)_
 
 Display an image within a (graphical) window.
 
+* Use from the [cli](https://github.com/foresterre/miniview#usage-binary)
+* Use as [library](https://github.com/foresterre/miniview#usage-example-library)
+    * Documentation: [docs.rs](https://docs.rs/miniview/)
+
 
 # Install
 
@@ -62,6 +66,84 @@ fn main() {
     let closed = controls.close();
     assert!(closed.is_ok());
 }
+```
+
+# Backends
+
+MiniView supports two backends: piston-window and pixels. You can switch between backends on compile time. This requires
+setting Cargo [features](https://doc.rust-lang.org/cargo/reference/features.html). The piston-window backend can be
+enabled using the `backend_piston_window` feature, and the pixels backend can be enabled using the `backend_pixels` feature.
+
+The default backend is **piston-window**. This backend will be used if no-default-features is not specified. 
+
+The next sections provide examples, on how to enable each backend. Only one backend should be enabled at a time.
+
+## backend: piston-window
+
+### Platform support
+
+Supported platforms:
+* any platform supported by [piston-window](https://github.com/PistonDevelopers/piston_window) with Glutin, including:
+  * Linux
+  * MacOS
+  * Windows
+
+### Configuration examples
+
+When building MiniView, the piston-window backend can be used by compiling with:
+```bash
+cargo run --no-default-features --features backend_piston_window 
+```
+
+When using MiniView as a library, you can use:
+```toml
+[dependencies.miniview]
+version = "*" # select the latest version here
+default-features = false 
+features = ["backend_piston_window"]
+```
+
+or 
+
+```toml
+[dependencies]
+miniview = { version = "*", default-features = false, features = ["backend_piston_window"] }
+```
+
+## backend: pixels
+
+### Platform support
+
+Supported platforms:
+  * Linux
+  * Dragonfly
+  * FreeBSD
+  * NetBSD
+  * OpenBSD
+  * Windows
+
+Note: MacOS is not yet supported for this backend.
+
+### Configuration examples
+
+When building MiniView, the pixels backend can be used by compiling with:
+```bash
+cargo run --no-default-features --features backend_pixels
+```
+
+When using MiniView as a library, you can use:
+```toml
+[dependencies.miniview]
+version = "*" # select the latest version here
+default-features = false 
+features = ["backend_pixels"]
+```
+
+or
+
+```toml
+[dependencies]
+miniview = { version = "*", default-features = false, features = ["backend_pixels"] }
 ```
 
 # Suggestions, Questions, Bugs

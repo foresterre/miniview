@@ -73,6 +73,7 @@ jobs:
 
       - name: build_backend_pixels
         uses: actions-rs/cargo@v1
+        if:  matrix.build != 'macos' # unsupported
         with:
           command: build
           args: --verbose --all --features backend_pixels --no-default-features

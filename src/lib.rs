@@ -116,6 +116,8 @@
 //! [`MiniView.show`]: struct.MiniView.html#method.show
 //! [`ConfigBuilder`]: config/struct.ConfigBuilder.html
 
+#![allow(clippy::upper_case_acronyms)]
+
 extern crate image as imagecrate; // There is also an image module in piston_window
 
 use crate::config::Config;

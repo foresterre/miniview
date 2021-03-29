@@ -1559,9 +1559,9 @@ checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 
 [[package]]
 name = "piston"
-version = "0.52.1"
+version = "0.53.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2a0fda264e154f7e9c2fe4524d4e87c9bbf5d1c7719617d5cc265d1151aa8b75"
+checksum = "0b6db9e4eb603719bef3900670326b949b374df616540a7417190b69c9710475"
 dependencies = [
  "pistoncore-event_loop",
  "pistoncore-input",
@@ -1644,9 +1644,9 @@ dependencies = [
 
 [[package]]
 name = "piston_window"
-version = "0.117.0"
+version = "0.118.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0971ff2b6a8e3b587fffeced23d827b115924db10f97533449eafe457d7e7793"
+checksum = "6cd8f6bb5cfdcf53da8bcc5b4a7548ece3044356ca8442e38b91d4bd7f4d8c0d"
 dependencies = [
  "gfx",
  "gfx_device_gl",
@@ -1660,12 +1660,13 @@ dependencies = [
 
 [[package]]
 name = "pistoncore-event_loop"
-version = "0.52.0"
+version = "0.53.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c1afc1c7b1bd1c673ffa0a0651f2d114e68a3cb5db0ba736d8227c4d68783b02"
+checksum = "926d55aed01d7c6f883cc06afd5349b2cb5c1243e12a47dc4d3b798121136e9e"
 dependencies = [
  "pistoncore-input",
  "pistoncore-window",
+ "spin_sleep",
 ]
 
 [[package]]
@@ -1971,6 +1972,16 @@ dependencies = [
  "wayland-client",
  "wayland-cursor",
  "wayland-protocols",
+]
+
+[[package]]
+name = "spin_sleep"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2a98101bdc3833e192713c2af0b0dd2614f50d1cf1f7a97c5221b7aac052acc7"
+dependencies = [
+ "once_cell",
+ "winapi 0.3.9",
 ]
 
 [[package]]

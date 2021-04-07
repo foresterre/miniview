@@ -86,7 +86,7 @@ The next sections provide examples, on how to enable each backend. Only one back
 Supported platforms:
 * any platform supported by [piston-window](https://github.com/PistonDevelopers/piston_window) with Glutin, including:
   * Linux
-  * MacOS
+  * ~~MacOS~~ (We need to be able to create a graphical window off the main thread)
   * Windows
 
 ### Configuration examples

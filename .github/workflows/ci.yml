@@ -22,6 +22,7 @@ jobs:
     name: pipeline_run_tests
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         build: [stable, beta, nightly, macos, win-gnu, win-msvc]
         include:

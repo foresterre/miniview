@@ -25,7 +25,7 @@ Pre-build binary: see [releases](https://github.com/foresterre/miniview/releases
 
 ### Add library dependency
 
-Run `cargo add miniview` with [cargo-edit](https://crates.io/crates/cargo-edit), or add the `miniview` as a dependency to your `Cargo.toml`:
+Run `cargo add miniview` with [cargo-edit](https://crates.io/crates/cargo-edit), or add `miniview` as a dependency to your `Cargo.toml`:
 
 ```toml
 miniview = "*" # replace `*` with the latest version

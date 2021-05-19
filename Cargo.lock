@@ -1814,9 +1814,9 @@ dependencies = [
 
 [[package]]
 name = "piston2d-gfx_graphics"
-version = "0.72.0"
+version = "0.73.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8b0031c98b281028b0f7a2fdfd926354f361f29a378434223f24c81854f257c6"
+checksum = "84b79261cc8dfd181ad82640a1cac6fcbdb57f3ef447673ec8ec6926e5b33a8d"
 dependencies = [
  "draw_state",
  "gfx",
@@ -1828,9 +1828,9 @@ dependencies = [
 
 [[package]]
 name = "piston2d-graphics"
-version = "0.39.0"
+version = "0.40.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d202b6ca097b66afdde8f31b434a54c58576c461d003c90f919ed5a086c39805"
+checksum = "beb104512055b3bf44fc3d8dad9af88abda16a468d048626ae9b49f634802c67"
 dependencies = [
  "fnv",
  "interpolation",
@@ -1843,9 +1843,9 @@ dependencies = [
 
 [[package]]
 name = "piston_window"
-version = "0.118.0"
+version = "0.120.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6cd8f6bb5cfdcf53da8bcc5b4a7548ece3044356ca8442e38b91d4bd7f4d8c0d"
+checksum = "96675d1e6ea52d59751e1fb956c3600b8d67a5d62cacbfb553f2ef07374d93f5"
 dependencies = [
  "gfx",
  "gfx_device_gl",
@@ -1870,9 +1870,9 @@ dependencies = [
 
 [[package]]
 name = "pistoncore-glutin_window"
-version = "0.68.2"
+version = "0.69.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0dc6256d86856cce33671dc7566754f79df13825697f4be371c0a01e546d8512"
+checksum = "66086130e496d440aba286ba47b7d61e33413208323bec3499bf7975fa72dc2e"
 dependencies = [
  "gl",
  "glutin",

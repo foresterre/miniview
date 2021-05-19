@@ -8,7 +8,7 @@
 MiniView is a bare-bones image viewer intended to be used during development and testing.
 MiniView can be called as binary from the CLI, and used as a Rust library.
 
-To see what it can do, and would fit your purpose, please see:
+To see what it can do, and whether it would fit your purpose, please see:
 * Use from the [cli](https://github.com/foresterre/miniview#instructions-for-cli-use)
 * Use as [library](https://github.com/foresterre/miniview#instructions-for-library-use)
     * Documentation: [docs.rs](https://docs.rs/miniview/)
@@ -144,16 +144,6 @@ NB: replace `*` in `version = "*"` with [any supported version](https://crates.i
 | OpenBSD | ✅ |||
 | ... other [pixels](https://github.com/parasyte/pixels) + [winit](https://github.com/rust-windowing/winit) platforms | | | Assuming graphical windows can be created off the main thread, support can be added. Please open an [issue](https://github.com/foresterre/miniview/issues).
 
-
-Supported platforms:
-  * Linux
-  * Dragonfly
-  * FreeBSD
-  * NetBSD
-  * OpenBSD
-  * Windows
-
-Note: MacOS is not yet supported for this backend.
 
 ### Configuration examples
 

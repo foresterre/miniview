@@ -125,7 +125,7 @@ pub(crate) fn show(config: Config) -> MVResult<MiniView> {
 
                 // Resize
                 if let Some(size) = input.window_resized() {
-                    pixels.resize(size.width, size.height);
+                    pixels.resize_surface(size.width, size.height);
                 }
 
                 // Redraw on change

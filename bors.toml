@@ -1,5 +1,4 @@
 status = [
-    "pipeline_run_tests (pinned)",
     "pipeline_run_tests (stable)",
     "pipeline_run_tests (beta)",
     "pipeline_run_tests (nightly)",

@@ -15,8 +15,10 @@ on:
     branches:
       - master
       - main
+      - staging # for Bors
+      - trying # for Bors
   schedule:
-    - cron: '00 01 * * *'
+    - cron: '00 04,14 * * *'
 jobs:
   test:
     name: pipeline_run_tests
@@ -133,3 +135,25 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: EmbarkStudios/cargo-deny-action@v1
+
+  msrv:
+    name: pipeline_msrv
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: checkout_repo
+        uses: actions/checkout@v2
+      - name: install_nasm
+        uses: ilammy/setup-nasm@v1
+      - name: install_rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          profile: minimal
+      - name: install_cargo_msrv
+        run: cargo install cargo-msrv
+      - name: version_of_cargo_msrv
+        run: cargo msrv --version # as of writing: 0.6.0
+      - name: run_cargo_msrv
+        run: cargo msrv --bisect --ignore-lockfile --output-format json --minimum 1.31.0

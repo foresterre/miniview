@@ -8,7 +8,7 @@
 # --
 # based on Actions workflow for is
 
-name: "github_actions_ci"
+name: "ci"
 on:
   pull_request:
   push:
@@ -21,7 +21,7 @@ on:
     - cron: '00 04,14 * * *'
 jobs:
   test:
-    name: pipeline_run_tests
+    name: test
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -82,7 +82,7 @@ jobs:
           args: --verbose --all --features backend_pixels --no-default-features
 
   rustfmt:
-    name: pipeline_rustfmt
+    name: rustfmt
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout repository
@@ -99,7 +99,7 @@ jobs:
           cargo fmt --all -- --check
 
   clippy:
-    name: pipeline_clippy
+    name: clippy
     runs-on: ubuntu-18.04
     steps:
       - name: checkout_repo
@@ -123,7 +123,7 @@ jobs:
           args: --all-targets --no-default-features --features backend_pixels -- -D warnings
 
   cargo_deny:
-    name: pipeline_cargo_deny
+    name: cargo_deny
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -137,14 +137,12 @@ jobs:
       - uses: EmbarkStudios/cargo-deny-action@v1
 
   msrv:
-    name: pipeline_msrv
+    name: msrv
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
       - name: checkout_repo
         uses: actions/checkout@v2
-      - name: install_nasm
-        uses: ilammy/setup-nasm@v1
       - name: install_rust
         uses: actions-rs/toolchain@v1
         with:
@@ -154,6 +152,6 @@ jobs:
       - name: install_cargo_msrv
         run: cargo install cargo-msrv
       - name: version_of_cargo_msrv
-        run: cargo msrv --version # as of writing: 0.6.0
+        run: cargo msrv --version # as of writing: 0.7.0 (required for --verify)
       - name: run_cargo_msrv
-        run: cargo msrv --bisect --ignore-lockfile --output-format json --minimum 1.31.0
+        run: cargo msrv --verify --ignore-lockfile --output-format json

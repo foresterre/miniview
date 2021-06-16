@@ -11,6 +11,9 @@ keywords = ["image", "display", "graphical"]
 categories = ["graphics", "command-line-utilities"]
 exclude = ["resources/*", ".idea", "*.iml", ".vscode"]
 
+[package.metadata]
+msrv = "1.51.0"
+
 [features]
 default = ["backend_pixels"]
 backend_piston_window = ["piston_window"]

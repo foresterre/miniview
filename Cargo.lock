@@ -75,9 +75,9 @@ dependencies = [
 
 [[package]]
 name = "assert_cmd"
-version = "1.0.5"
+version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a88b6bd5df287567ffdf4ddf4d33060048e1068308e5f62d81c6f9824a045a48"
+checksum = "aa2dfc8228c6260bf620fc5a341afa8e27edcde388b19ffc5732320bfe657eb2"
 dependencies = [
  "bstr",
  "doc-comment",
@@ -2074,9 +2074,9 @@ checksum = "f173ac3d1a7e3b28003f40de0b5ce7fe2710f9b9dc3fc38664cebee46b3b6527"
 
 [[package]]
 name = "slotmap"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c46a3482db8f247956e464d783693ece164ca056e6e67563ee5505bdb86452cd"
+checksum = "27c79d04aa1cee5bd254d4d31924b8c752cfa1bf4793cb4596afb502a8e8bffc"
 
 [[package]]
 name = "smallvec"

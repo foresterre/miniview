@@ -35,5 +35,5 @@ anyhow = "1.0.42"
 thiserror = "1.0.26"
 
 [dev-dependencies]
-assert_cmd = "1.0.7"
+assert_cmd = "1.0.8"
 parameterized = "0.3.1"

@@ -14,3 +14,19 @@ allow = [
     "Unlicense",
     "Zlib",
 ]
+
+[advisories]
+ignore = [
+    # nix v0.18.0 - NB: Update available
+    # ├── calloop v0.6.5 - NB: Update available
+    # │   └── smithay-client-toolkit v0.12.3 - NB: Update available
+    # │       └── winit v0.25.0 - NB: Update available, but unreleased (as of 2021-10-10)
+    # │           └── winit_input_helper v0.10.0 - NB: Depends on winit v0.25.0
+    # │               └── miniview v0.5.1
+    # └── smithay-client-toolkit v0.12.3 (*)
+    "RUSTSEC-2021-0119",
+
+]
+
+
+

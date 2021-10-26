@@ -1823,9 +1823,9 @@ checksum = "62c93564eef40a9920d026697f63d224efd7ac80981fb418fe1dad447c2d9bdd"
 
 [[package]]
 name = "piston-viewport"
-version = "1.0.0"
+version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "01abb19b781051290d0837b9294c26d419cc4156907c21ffe86705e219446798"
+checksum = "12cd38d4259b30d42eaea6a35191feba5b0b4758dbbacc21dee8c223a3a7898a"
 dependencies = [
  "piston-float",
 ]

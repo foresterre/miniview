@@ -2,7 +2,7 @@
 name = "miniview"
 version = "0.5.1"
 authors = ["Martijn Gribnau <garm@ilumeo.com>"]
-edition = "2018"
+edition = "2021"
 license = "Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/foresterre/miniview"
@@ -10,9 +10,10 @@ description = "Display an image within a (graphical) window. Callable from a CLI
 keywords = ["image", "display", "graphical"]
 categories = ["graphics", "command-line-utilities"]
 exclude = ["resources/*", ".idea", "*.iml", ".vscode"]
+rust-version = "1.56"
 
 [package.metadata]
-msrv = "1.51.0"
+msrv = "1.56"
 
 [features]
 default = ["backend_pixels"]

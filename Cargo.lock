@@ -1200,6 +1200,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "mio"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba272f85fa0b41fc91872be579b3bbe0f56b792aa361a380eb669469f68dafb2"
+dependencies = [
+ "libc",
+ "log",
+ "miow 0.3.7",
+ "ntapi",
+ "winapi 0.3.9",
+]
+
+[[package]]
 name = "mio-extras"
 version = "2.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1213,14 +1226,14 @@ dependencies = [
 
 [[package]]
 name = "mio-misc"
-version = "1.2.1"
+version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0ddf05411bb159cdb5801bb10002afb66cb4572be656044315e363460ce69dc2"
+checksum = "cae6d1ec21390bd1827f3900758558c66c04e482edabb1671f22c4d92b523e0e"
 dependencies = [
  "crossbeam",
  "crossbeam-queue",
  "log",
- "mio 0.7.11",
+ "mio 0.8.0",
 ]
 
 [[package]]

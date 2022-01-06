@@ -1174,7 +1174,7 @@ dependencies = [
  "piston_window",
  "pixels",
  "thiserror",
- "winit 0.26.0",
+ "winit 0.26.1",
  "winit_input_helper",
 ]
 
@@ -2714,12 +2714,11 @@ dependencies = [
 
 [[package]]
 name = "winit"
-version = "0.26.0"
+version = "0.26.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "70466a5f4825cc88c92963591b06dbc255420bffe19d847bfcda475e82d079c0"
+checksum = "9b43cc931d58b99461188607efd7acb2a093e65fc621f54cad78517a6063e73a"
 dependencies = [
  "bitflags",
- "block",
  "cocoa 0.24.0",
  "core-foundation 0.9.2",
  "core-graphics 0.22.3",
@@ -2752,7 +2751,7 @@ version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "72c8618b5c5e3f44a9d0a2ace15ad580cb7402d585507f4f9c74d07af7603909"
 dependencies = [
- "winit 0.26.0",
+ "winit 0.26.1",
 ]
 
 [[package]]

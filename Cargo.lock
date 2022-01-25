@@ -2583,9 +2583,9 @@ dependencies = [
 
 [[package]]
 name = "wgpu-hal"
-version = "0.12.3"
+version = "0.12.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62fa524903bf336b51a399f0d586f3c30af94101149588678ef147c30be89e53"
+checksum = "93b1a9400e8d7f32dd4dd909bb9a391015d70633d639775ddd3f14d1104bc970"
 dependencies = [
  "arrayvec",
  "ash",

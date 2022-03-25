@@ -1,7 +1,7 @@
 use crate::config::Config;
 use crate::{Action, FullscreenWhen, MVResult, MiniView, MiniViewError};
 use clap::crate_name;
-use imagecrate::{EncodableLayout, GenericImageView};
+use imagecrate::EncodableLayout;
 use pixels::{Pixels, SurfaceTexture};
 use std::fmt::{Debug, Formatter};
 use std::sync::mpsc;

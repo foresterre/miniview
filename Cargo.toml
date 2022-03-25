@@ -12,20 +12,17 @@ categories = ["graphics", "command-line-utilities"]
 exclude = ["resources/*", ".idea", "*.iml", ".vscode"]
 rust-version = "1.56"
 
-[package.metadata]
-msrv = "1.56"
-
 [features]
 default = ["backend_pixels"]
 backend_piston_window = ["piston_window"]
 backend_pixels = ["pixels", "winit", "winit_input_helper"]
 
 [dependencies]
-image = "0.23.14"
+image = "0.24.1"
 clap = "2.34.0"
 
 # backend_piston_window
-piston_window = { version = "0.121.0", optional = true }
+piston_window = { version = "0.123.0", optional = true }
 
 # backend_pixels
 pixels = { version = "0.9.0", optional = true }

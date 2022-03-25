@@ -1,7 +1,6 @@
 use crate::config::Config;
 use crate::{Action, MVResult, MiniView, MiniViewError, ResizableWhen};
 use clap::crate_name;
-use imagecrate::GenericImageView;
 use piston_window::{
     Button, ButtonArgs, Event, EventLoop, G2dTexture, G2dTextureContext, GenericEvent, Input, Key,
     Loop, PistonWindow, Texture, TextureSettings, Window, WindowSettings,

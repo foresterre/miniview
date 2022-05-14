@@ -30,7 +30,7 @@ winit = { version = "0.26.1", optional = true }
 winit_input_helper = { version = "0.11.1", optional = true }
 
 anyhow = "1.0.57"
-thiserror = "1.0.30"
+thiserror = "1.0.31"
 
 [dev-dependencies]
 assert_cmd = "2.0.4"

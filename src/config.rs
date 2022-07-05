@@ -54,7 +54,7 @@ impl Config {
     }
 }
 
-impl<'window_name> Debug for Config {
+impl Debug for Config {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.write_str(&format!("Config(source = {:?}, fullscreen = {:?}, resizable_window = {:?}, window_name = {:?}, ...)",
                              self.source, self.fullscreen, self.resizable_window, self.window_name))

@@ -1138,9 +1138,9 @@ checksum = "830d08ce1d1d941e6b30645f1a0eb5643013d835ce3779a5fc208261dbe10f55"
 
 [[package]]
 name = "lebe"
-version = "0.5.1"
+version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7efd1d698db0759e6ef11a7cd44407407399a910c774dd804c64c032da7826ff"
+checksum = "03087c2bad5e1034e8cace5926dec053fb3790248370865f5117a7d0213354c8"
 
 [[package]]
 name = "libc"
@@ -1629,9 +1629,9 @@ dependencies = [
 
 [[package]]
 name = "once_cell"
-version = "1.13.0"
+version = "1.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "18a6dbe30758c9f83eb00cbea4ac95966305f5a7772f3f42ebfc7fc7eddbd8e1"
+checksum = "074864da206b4973b84eb91683020dbefd6a8c3f0f38e054d93954e891935e4e"
 
 [[package]]
 name = "osmesa-sys"
@@ -1810,9 +1810,9 @@ dependencies = [
 
 [[package]]
 name = "piston_window"
-version = "0.123.0"
+version = "0.124.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0982cde15bf06146d587da262b8091224408855786ff10de7e45a7145e7c714e"
+checksum = "2ac26f53c1726eb60a3e8162cbf295ea31f42d6f3d3a2e2806d07fb540adb602"
 dependencies = [
  "gfx",
  "gfx_device_gl",
@@ -1837,9 +1837,9 @@ dependencies = [
 
 [[package]]
 name = "pistoncore-glutin_window"
-version = "0.69.0"
+version = "0.70.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "66086130e496d440aba286ba47b7d61e33413208323bec3499bf7975fa72dc2e"
+checksum = "a2625037feaa575206054a7a10b397739c6c10e81be0ae65858182d6dd906d30"
 dependencies = [
  "gl",
  "glutin",

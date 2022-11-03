@@ -7,7 +7,7 @@ use std::fmt::{Debug, Formatter};
 use std::sync::mpsc;
 use std::thread;
 use winit::event::{Event, VirtualKeyCode};
-use winit::event_loop::{ControlFlow, EventLoop};
+use winit::event_loop::{ControlFlow, EventLoop, EventLoopBuilder};
 #[cfg(any(
     target_os = "linux",
     target_os = "dragonfly",
@@ -15,9 +15,9 @@ use winit::event_loop::{ControlFlow, EventLoop};
     target_os = "netbsd",
     target_os = "openbsd"
 ))]
-use winit::platform::unix::EventLoopExtUnix;
+use winit::platform::unix::EventLoopBuilderExtUnix;
 #[cfg(target_os = "windows")]
-use winit::platform::windows::EventLoopExtWindows;
+use winit::platform::windows::EventLoopBuilderExtWindows;
 use winit::window::{Fullscreen, WindowBuilder};
 use winit_input_helper::WinitInputHelper;
 
@@ -33,7 +33,7 @@ impl ImageWindow {
     ) -> MVResult<ImageWindow> {
         let size = winit::dpi::PhysicalSize::new(size[0] as f64, size[1] as f64);
 
-        let window = winit::window::WindowBuilder::new()
+        let window = WindowBuilder::new()
             .with_title(crate_name!())
             .with_inner_size(size)
             .fullscreen_when(|| config.fullscreen())
@@ -82,12 +82,12 @@ pub(crate) fn show(config: Config) -> MVResult<MiniView> {
             target_os = "openbsd",
             target_os = "windows"
         ))]
-        let event_loop = winit::event_loop::EventLoop::new_any_thread();
+        let event_loop = EventLoopBuilder::new().with_any_thread(true).build();
 
         // FIXME: this will probably crash, since we explicitly start the event loop off thread.
         //   As a result, macos is not supported for now
         #[cfg(target_os = "macos")]
-        let event_loop = winit::event_loop::EventLoop::new();
+        let event_loop = EventLoop::new();
 
         let mut input = WinitInputHelper::new();
         let image_window = ImageWindow::try_new(&config, [width, height], &event_loop)?;
@@ -134,7 +134,7 @@ pub(crate) fn show(config: Config) -> MVResult<MiniView> {
 
             // Redraw the image, if requested
             if let Event::RedrawRequested(_id) = event {
-                let frame = pixels.get_frame();
+                let frame = pixels.get_frame_mut();
                 frame.copy_from_slice(img.as_bytes());
 
                 let _ = pixels.render();

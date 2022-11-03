@@ -53,13 +53,13 @@ fn main() {
     // Check if cargo-bom is available in our PATH.
     let cargo_bom_might_be_installed = if cfg!(windows) {
         Command::new("where.exe")
-            .args(&["cargo-bom"])
+            .args(["cargo-bom"])
             .output()
             .expect("`where.exe` unavailable.")
             .stdout
     } else {
         Command::new("which")
-            .args(&["cargo-bom"])
+            .args(["cargo-bom"])
             .output()
             .expect("`which` unavailable.")
             .stdout
@@ -77,7 +77,7 @@ fn main() {
     // In this case we install cargo-bom
     if !path.exists() {
         let installation_code = Command::new("cargo")
-            .args(&["install", "cargo-bom"])
+            .args(["install", "cargo-bom"])
             .status()
             .expect("Unable to get status of cargo-bom install.");
 
@@ -93,7 +93,7 @@ fn main() {
     // Next, we will use cargo-bom to generate the licenses from our dependencies.
     // These will be saved under <crate>/target/DEP_LICENSES.
     let dep_licenses_in_bytes = Command::new("cargo")
-        .args(&["bom"])
+        .args(["bom"])
         .output()
         .expect(
             "Unable to read `cargo bom` output; `cargo-bom` and `cargo` should be in your path!",

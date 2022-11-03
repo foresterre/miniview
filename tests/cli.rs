@@ -28,7 +28,7 @@ mod from_stdin {
     fn stdin_path() {
         let _ = Command::cargo_bin("miniview")
             .expect("MiniView binary not found")
-            .args(&["--from-stdin-path", "--close-after", "1"])
+            .args(["--from-stdin-path", "--close-after", "1"])
             .write_stdin(input())
             .assert()
             .success();
@@ -38,7 +38,7 @@ mod from_stdin {
     fn stdin_bytes() {
         let _ = Command::cargo_bin("miniview")
             .expect("MiniView binary not found")
-            .args(&["--from-stdin-bytes", "--close-after", "10"])
+            .args(["--from-stdin-bytes", "--close-after", "10"])
             .pipe_stdin(input())
             .expect("Test input file not found")
             .assert()

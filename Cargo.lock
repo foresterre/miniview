@@ -1907,9 +1907,9 @@ dependencies = [
 
 [[package]]
 name = "piston"
-version = "0.53.1"
+version = "0.53.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f483bc0f9316e80f27c9f083fb20e8ae881a9799ad792cf683a059f3f58d6e6"
+checksum = "6e465487e1063ebe4103bc0fb65bc3dd604b635b2012a41530d3a5f77106e526"
 dependencies = [
  "pistoncore-event_loop",
  "pistoncore-input",

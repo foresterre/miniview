@@ -98,30 +98,6 @@ jobs:
         run: |
           cargo fmt --all -- --check
 
-  clippy:
-    name: clippy
-    runs-on: ubuntu-18.04
-    steps:
-      - name: checkout_repo
-        uses: actions/checkout@v2
-      - name: install_rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-          profile: minimal
-          components: clippy
-      - name: check_with_clippy_backend_piston_window
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-targets --no-default-features --features backend_piston_window -- -D warnings
-      - name: check_with_clippy_backend_pixels
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-targets --no-default-features --features backend_pixels -- -D warnings
-
   cargo_deny:
     name: cargo_deny
     runs-on: ubuntu-latest

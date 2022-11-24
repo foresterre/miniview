@@ -21,7 +21,6 @@ on:
     - cron: '00 04,14 * * *'
 jobs:
   test:
-    name: test
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -43,11 +42,6 @@ jobs:
             os: ubuntu-latest
             rust: nightly
 
-          # latest rust stable :: mac_os
-          - build: macos
-            os: macOS-latest
-            rust: stable
-
           # latest rust stable :: windows + gnu
           - build: win-gnu
             os: windows-latest
@@ -61,6 +55,7 @@ jobs:
     steps:
       - name: checkout_repo
         uses: actions/checkout@v2
+
       - name: install_rust
         uses: actions-rs/toolchain@v1
         with:
@@ -68,15 +63,18 @@ jobs:
           override: true
           profile: minimal
 
-      - name: build_backend_piston_window
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --verbose --all --features backend_piston_window --no-default-features
+      # backend: pixels
 
       - name: build_backend_pixels
-        uses: actions-rs/cargo@v1
-        if:  matrix.build != 'macos' # unsupported
-        with:
-          command: build
-          args: --verbose --all --features backend_pixels --no-default-features
+        run: cargo build --verbose --no-default-features --features backend_pixels
+
+      - name: test_backend_pixels
+        run: cargo test --verbose --no-default-features  --features backend_pixels
+
+      # backend: piston_window
+
+      - name: build_backend_piston_window
+        run: cargo build --verbose --no-default-features --features backend_piston_window
+
+      - name: test_backend_piston_window
+        run: cargo test --verbose --no-default-features  --features backend_piston_window

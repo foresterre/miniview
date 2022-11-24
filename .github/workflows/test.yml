@@ -1,0 +1,82 @@
+# GitHub Actions workflow: CI for miniview
+# --
+# Based on GitHub Actions workflow: CI for sic: https://github.com/foresterre/sic/blob/dc589e2b3014e27038d450d1ae99e5251c68247b/.github/workflows/ci.yml
+# which is licensed under the MIT license: https://github.com/foresterre/sic/blob/dc589e2b3014e27038d450d1ae99e5251c68247b/LICENSE
+# --
+# originally based on: https://github.com/BurntSushi/bstr/blob/master/.github/workflows/ci.yml
+# which is licensed under Apache License, Version 2.0 or MIT license
+# --
+# based on Actions workflow for is
+
+name: "ci-test"
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - main
+      - staging # for Bors
+      - trying # for Bors
+  schedule:
+    - cron: '00 06 * * *'
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [stable, beta, nightly, win-gnu, win-msvc]
+        include:
+          # latest rust stable :: ubuntu
+          - build: stable
+            os: ubuntu-latest
+            rust: stable
+
+          # latest rust beta :: ubuntu
+          - build: beta
+            os: ubuntu-latest
+            rust: beta
+
+          # latest rust nightly :: ubuntu
+          - build: nightly
+            os: ubuntu-latest
+            rust: nightly
+
+          # latest rust stable :: windows + gnu
+          - build: win-gnu
+            os: windows-latest
+            rust: stable-x86_64-gnu
+
+          # latest rust stable :: windows + msvc
+          - build: win-msvc
+            os: windows-latest
+            rust: stable
+
+    steps:
+      - name: checkout_repo
+        uses: actions/checkout@v2
+
+      - name: install_rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          override: true
+          profile: minimal
+
+      # backend: pixels
+
+      - name: build_backend_pixels
+        run: cargo build --verbose --no-default-features --features backend_pixels
+
+      # we do not test on the CI because it does not have a compositor
+      # - name: test_backend_pixels
+      #  run: cargo test --verbose --no-default-features  --features backend_pixels
+
+      # backend: piston_window
+
+      - name: build_backend_piston_window
+        run: cargo build --verbose --no-default-features --features backend_piston_window
+
+      # we do not test on the CI because it does not have a compositor
+      # - name: test_backend_piston_window
+      #   run: cargo test --verbose --no-default-features  --features backend_piston_window

@@ -8,7 +8,7 @@
 # --
 # based on Actions workflow for is
 
-name: "ci"
+name: "ci-test"
 on:
   pull_request:
   push:

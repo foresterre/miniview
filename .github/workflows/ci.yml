@@ -80,20 +80,3 @@ jobs:
         with:
           command: build
           args: --verbose --all --features backend_pixels --no-default-features
-
-  rustfmt:
-    name: rustfmt
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: install_rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-          profile: minimal
-          components: rustfmt
-      - name: check_formatting
-        run: |
-          cargo fmt --all -- --check

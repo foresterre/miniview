@@ -68,13 +68,15 @@ jobs:
       - name: build_backend_pixels
         run: cargo build --verbose --no-default-features --features backend_pixels
 
-      - name: test_backend_pixels
-        run: cargo test --verbose --no-default-features  --features backend_pixels
+      # we do not test on the CI because it does not have a compositor
+      # - name: test_backend_pixels
+      #  run: cargo test --verbose --no-default-features  --features backend_pixels
 
       # backend: piston_window
 
       - name: build_backend_piston_window
         run: cargo build --verbose --no-default-features --features backend_piston_window
 
-      - name: test_backend_piston_window
-        run: cargo test --verbose --no-default-features  --features backend_piston_window
+      # we do not test on the CI because it does not have a compositor
+      # - name: test_backend_piston_window
+      #   run: cargo test --verbose --no-default-features  --features backend_piston_window

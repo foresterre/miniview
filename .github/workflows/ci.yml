@@ -97,17 +97,3 @@ jobs:
       - name: check_formatting
         run: |
           cargo fmt --all -- --check
-
-  cargo_deny:
-    name: cargo_deny
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        checks:
-          - advisories
-          - bans licenses sources
-
-    continue-on-error: ${{ matrix.checks == 'advisories' }}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: EmbarkStudios/cargo-deny-action@v1

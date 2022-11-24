@@ -18,7 +18,7 @@ on:
       - staging # for Bors
       - trying # for Bors
   schedule:
-    - cron: '00 04,14 * * *'
+    - cron: '00 06 * * *'
 jobs:
   test:
     runs-on: ${{ matrix.os }}

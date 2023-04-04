@@ -1236,7 +1236,7 @@ dependencies = [
  "piston_window",
  "pixels",
  "thiserror",
- "winit 0.27.5",
+ "winit 0.28.3",
  "winit_input_helper",
 ]
 

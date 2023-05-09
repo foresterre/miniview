@@ -2905,9 +2905,9 @@ dependencies = [
 
 [[package]]
 name = "xml-rs"
-version = "0.8.5"
+version = "0.8.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "374b609fb36c36ce3501094dc0548f7df5d8d102224b65bc59812e4a5425d571"
+checksum = "4f20f14e2bd1fef6ec891d50dbb37c7290a0568a6bbd9020bf62010d02b6f80e"
 
 [[package]]
 name = "zune-inflate"

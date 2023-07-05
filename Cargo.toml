@@ -10,7 +10,7 @@ description = "Display an image within a (graphical) window. Callable from a CLI
 keywords = ["image", "display", "graphical"]
 categories = ["graphics", "command-line-utilities"]
 exclude = ["resources/*", ".idea", "*.iml", ".vscode"]
-rust-version = "1.64"
+rust-version = "1.70"
 
 [features]
 default = ["backend_pixels"]

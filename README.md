@@ -19,7 +19,7 @@ MiniView is not intended to be used as your primary image viewer. For that purpo
 
 ### Binary installation
 
-With [cargo](https://crates.io/crates/miniview) install: `cargo install --force miniview`
+With [cargo](https://crates.io/crates/miniview) install: `cargo install miniview`
 
 Pre-build binary: see [releases](https://github.com/foresterre/miniview/releases)
 

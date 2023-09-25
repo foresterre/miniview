@@ -118,14 +118,14 @@ pub(crate) fn show(config: Config) -> MVResult<MiniView> {
 
             if input.update(&event) {
                 // Exit when either pressing escape or the close button
-                if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
+                if input.key_pressed(VirtualKeyCode::Escape) || input.close_requested() || input.destroyed() {
                     *control_flow = ControlFlow::Exit;
                     return;
                 }
 
                 // Resize
                 if let Some(size) = input.window_resized() {
-                    pixels.resize_surface(size.width, size.height);
+                    let _ = pixels.resize_surface(size.width, size.height);
                 }
 
                 // Redraw on change
@@ -134,7 +134,7 @@ pub(crate) fn show(config: Config) -> MVResult<MiniView> {
 
             // Redraw the image, if requested
             if let Event::RedrawRequested(_id) = event {
-                let frame = pixels.get_frame_mut();
+                let frame = pixels.frame_mut();
                 frame.copy_from_slice(img.as_bytes());
 
                 let _ = pixels.render();

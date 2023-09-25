@@ -7,30 +7,23 @@ on:
       - main
       - staging # for Bors
       - trying # for Bors
+  merge_group:
 jobs:
   linter:
+    name: linter
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
       - name: checkout_repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: install_rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
-          override: true
-          profile: minimal
           components: clippy
 
       - name: check_with_clippy_backend_pixels
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-targets --no-default-features --features backend_pixels -- -D warnings
+        run: cargo clippy --all-targets --no-default-features --features backend_pixels -- -D warnings
 
       - name: check_with_clippy_backend_piston_window
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-targets --no-default-features --features backend_piston_window -- -D warnings
+        run: cargo clippy --all-targets --no-default-features --features backend_piston_window -- -D warnings

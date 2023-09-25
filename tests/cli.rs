@@ -1,3 +1,5 @@
+#![allow(clippy::items_after_test_module)]
+
 use assert_cmd::Command;
 use common::input;
 use parameterized::{ide, parameterized};

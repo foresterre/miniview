@@ -25,22 +25,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build: [stable, beta, nightly, win-gnu, win-msvc]
+        build: [stable, win-gnu, win-msvc]
         include:
           # latest rust stable :: ubuntu
           - build: stable
             os: ubuntu-latest
             rust: stable
-
-          # latest rust beta :: ubuntu
-          - build: beta
-            os: ubuntu-latest
-            rust: beta
-
-          # latest rust nightly :: ubuntu
-          - build: nightly
-            os: ubuntu-latest
-            rust: nightly
 
           # latest rust stable :: windows + gnu
           - build: win-gnu

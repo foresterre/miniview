@@ -102,9 +102,13 @@ pub(crate) fn show(config: Config) -> MVResult<MiniView> {
                         window.close_window();
                         return Ok(());
                     }
-                    Event::Input(Input::Button(ButtonArgs { button, .. }), _)
-                        if button == Button::Keyboard(Key::Escape) =>
-                    {
+                    Event::Input(
+                        Input::Button(ButtonArgs {
+                            button: Button::Keyboard(Key::Escape),
+                            ..
+                        }),
+                        _,
+                    ) => {
                         window.close_window();
                         return Ok(());
                     }

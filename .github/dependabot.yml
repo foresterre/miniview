@@ -12,3 +12,11 @@ updates:
   allow:
   - dependency-type: direct
   - dependency-type: indirect
+  groups:
+    winit:
+      patterns:
+      - "winit*"
+      update-types:
+      - "major"
+      - "minor"
+      - "patch"

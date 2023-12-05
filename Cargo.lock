@@ -2903,9 +2903,9 @@ dependencies = [
 
 [[package]]
 name = "winnow"
-version = "0.5.15"
+version = "0.5.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7c2e3184b9c4e92ad5167ca73039d0c42476302ab603e2fec4487511f38ccefc"
+checksum = "0383266b19108dfc6314a56047aa545a1b4d1be60e799b4dbdd407b56402704b"
 dependencies = [
  "memchr",
 ]

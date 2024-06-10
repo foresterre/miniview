@@ -148,10 +148,12 @@ pub mod io;
 /// [`MiniViewError`]: errors/enum.MiniViewError.html
 pub type MVResult<T> = Result<T, MiniViewError>;
 
+#[allow(unused)] // Only used by some backends
 trait ResizableWhen {
     fn resizable_when<P: Fn() -> bool>(self, predicate: P) -> Self;
 }
 
+#[allow(unused)] // Only used by some backends
 trait FullscreenWhen {
     fn fullscreen_when<P: Fn() -> bool>(self, predicate: P) -> Self;
 }
